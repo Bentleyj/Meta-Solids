@@ -1,0 +1,3 @@
+ofxGui
+ofxEasing
+ofxNestedFileLoader
