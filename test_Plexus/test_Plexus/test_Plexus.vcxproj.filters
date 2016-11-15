@@ -121,5 +121,11 @@
     <None Include="bin\data\shaders\metaSolids.vert">
       <Filter>data\shaders</Filter>
     </None>
+    <None Include="bin\data\shaders\mask.frag">
+      <Filter>data\shaders</Filter>
+    </None>
+    <None Include="bin\data\shaders\mask.vert">
+      <Filter>data\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

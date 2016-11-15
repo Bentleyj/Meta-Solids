@@ -21,6 +21,7 @@
 uniform vec2 u_Resolution;
 uniform float u_Radius;
 uniform float u_CameraDistance;
+uniform float u_Noise;
 uniform float u_Time;
 uniform vec2 u_Mouse;
 uniform vec4 u_BallPositions[100];
@@ -89,7 +90,6 @@ float tetrahedron(vec3 p, float radius) {
 	return d;
 }
 
-// cube
 float hexahedron(vec3 p, float radius) {
 	float inra = getInradius(HEXAHEDRON_SCHLAFLI_SYMBOL, HEXAHEDRON_DIHEDRAL_ANGLE, radius);
 
@@ -176,6 +176,12 @@ float icosahedron(vec3 p, float radius) {
 	return d;
 }
 
+vec3 rayPlaneIntersection(vec3 ro, vec3 rd, vec4 plane)
+{
+	float t = -(dot(ro, plane.xyz) + plane.w) / dot(rd, plane.xyz);
+	return ro + t * rd;
+}
+
 mat3 calcLookAtMatrix(in vec3 camPos, in vec3 camTar, in float roll)
 {
 	vec3 ww = normalize(camTar - camPos);
@@ -204,27 +210,60 @@ void doCamera(out vec3 camPos, out vec3 camTar, in float time, in vec2 mouse)
 vec2 map(vec3 pos) {
 
 	float k = 5.0;
-	float b = 1.0;
+	float b = 0.5;
+	float br = 0.6;
 	float a = 4.0;
-	float rad = 0.1;
+	float rad = 0.7;
 
-	float t1 = hexahedron(pos + vec3(-4.0, 0.0, 0.0), u_Radius); //+ u_Noise * noise(pos * 1.0 + u_Time*0.75);;
-	t1 = smin(t1, icosahedron(pos + vec3(-2.0, 0.0, 0.0), u_Radius), k);
-	t1 = smin(t1, tetrahedron(pos + vec3(0.0, 0.0, 0.0), u_Radius), k);
-	t1 = smin(t1, octahedron(pos + vec3(2.0, 0.0, 0.0), u_Radius), k);
-	t1 = smin(t1, dodecahedron(pos + vec3(4.0, 0.0, 0.0), u_Radius), k);
+	//float t1 = hexahedron(pos + vec3(-4.0, 0.0, 0.0), u_Radius); //+ u_Noise * noise(pos * 1.0 + u_Time*0.75);;
+	//t1 = smin(t1, icosahedron(pos + vec3(-2.0, 0.0, 0.0), u_Radius), k);
+	float t1 = sphere(pos + vec3(0.0, 0.0, 0.0), u_Noise);
 
+	t1 = smin(t1, sphere(pos + a * vec3(sin(u_Time * b), 0.0, 0.0), rad * 1.2 * abs(sin(u_Time * br))), k);
+	t1 = smin(t1, sphere(pos + a * vec3(0.0, sin(u_Time * b), 0.0), rad * 1.2 * abs(sin(u_Time * br))), k);
+	t1 = smin(t1, sphere(pos + a * vec3(0.0, 0.0, sin(u_Time * b)), rad * 1.2 * abs(sin(u_Time * br))), k);
+	t1 = smin(t1, sphere(pos + a * vec3(-sin(u_Time * b), 0.0, 0.0), rad * 1.2 * abs(sin(u_Time * br))), k);
+	t1 = smin(t1, sphere(pos + a * vec3(0.0, -sin(u_Time * b), 0.0), rad * 1.2 * abs(sin(u_Time * br))), k);
+	t1 = smin(t1, sphere(pos + a * vec3(0.0, 0.0, -sin(u_Time * b)), rad * 1.2 * abs(sin(u_Time * br))), k);
+
+	b = 1.0;
+	br = 3.0;
 
 	//for (int i = 0; i < 40; i++) {
-	//t1 = smin(t1, sphere(pos + a * vec3( sin(u_Time * b), 0.0, 0.0), rad), k);
-	//t1 = smin(t1, tetrahedron(pos + a * vec3(0.0, sin(u_Time * b), 0.0), rad), k);
-	//t1 = smin(t1, hexahedron(pos + a * vec3(0.0, 0.0, sin(u_Time * b)), rad), k);
-	//t1 = smin(t1, octahedron(pos + a * vec3(-sin(u_Time * b), 0.0, 0.0), rad), k);
-	//t1 = smin(t1, dodecahedron(pos + a * vec3(0.0, -sin(u_Time * b), 0.0), rad), k);
+	t1 = smin(t1, sphere(pos + a * vec3( sin(u_Time * b), 0.0, 0.0), rad), k);
+	t1 = smin(t1, tetrahedron(pos + a * vec3(0.0, sin(u_Time * b), 0.0), rad), k);
+	t1 = smin(t1, hexahedron(pos + a * vec3(0.0, 0.0, sin(u_Time * b)), rad), k);
+	t1 = smin(t1, octahedron(pos + a * vec3(-sin(u_Time * b), 0.0, 0.0), rad), k);
+	t1 = smin(t1, dodecahedron(pos + a * vec3(0.0, -sin(u_Time * b), 0.0), rad), k);
+	t1 = smin(t1, icosahedron(pos + a * vec3(0.0, 0.0, -sin(u_Time * b)), rad), k);
 
 	//}
 
 	return vec2(t1, 1.0);
+}
+
+float shadow(in vec3 ro, in vec3 rd)
+{
+	const float k = 2.0;
+
+	const int maxSteps = 10;
+	float t = 0.0;
+	float res = 1.0;
+
+	for (int i = 0; i < maxSteps; ++i) {
+
+		float d = map(ro + rd*t).x;
+
+		if (d < INTERSECTION_PRECISION) {
+
+			return 0.0;
+		}
+
+		res = min(res, k*d / t);
+		t += d;
+	}
+
+	return res;
 }
 
 vec3 calcNormal(in vec3 pos) {
@@ -277,32 +316,12 @@ bool renderRayMarch(vec3 camPos, vec3 viewRay, vec3 viewRayMouse, inout vec3 col
 	{
 		vec3 currPos = camPos + viewRay * t;
 		renderColor(camPos, viewRay, color, currPos);
+		return true;
 	}
 
-	for (int i = 0; i < NUM_OF_TRACE_STEPS; ++i)
-	{
-		vec3 currPos = camPos + viewRayMouse * t;
-		d = map(currPos).x;
-		if (d < INTERSECTION_PRECISION)
-		{
-			break;
-		}
-
-		if (d > 100.0) {
-			break;
-		}
-
-		t += d;
-	}
-	if (d < INTERSECTION_PRECISION) {
-		color = vec3(1.0, 0.0, 0.0);
-	}
-
-
-
-	//vec3 planePoint = rayPlaneIntersection(ro, viewRay, vec4(0.0, 1.0, 0.0, 1.0));
-	//float shadowFloor = shadow(planePoint, vec3(0.0, 1.0, 0.0));
-	//color = color * mix(0.8, 1.0, shadowFloor);
+	vec3 planePoint = rayPlaneIntersection(camPos, viewRay, vec4(0.0, 0.0, 0.0, 1.0));
+	float shadowFloor = shadow(planePoint, vec3(0.0, 1.0, 0.0));
+	color = color * mix(0.8, 1.0, shadowFloor);
 
 	return false;
 }

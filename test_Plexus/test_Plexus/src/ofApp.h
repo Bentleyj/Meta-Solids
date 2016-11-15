@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
+#include "ofxNestedFileLoader.h"
 
 class ofApp : public ofBaseApp{
 
@@ -23,12 +24,18 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
 		ofShader metaballs;
+		ofShader maskShader;
+
+		ofFbo buffer;
+
+		vector<ofImage*> masks;
+		int maskIndex;
 		
 		ofxPanel gui;
 
-		vector<ofVec4f> ballPositions;
+		bool exploding;
 
-		ofFbo buffer;
+		vector<ofVec4f> ballPositions;
 
 		ofParameter<float> radius;
 		ofParameter<float> noise;

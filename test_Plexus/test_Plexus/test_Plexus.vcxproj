@@ -215,6 +215,8 @@ C:\Users\Flowers\Documents\of_v0.9.3_vs_release\addons\ofxGui\src;%(AdditionalIn
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="bin\data\shaders\mask.frag" />
+    <None Include="bin\data\shaders\mask.vert" />
     <None Include="bin\data\shaders\metaballs2D.frag" />
     <None Include="bin\data\shaders\metaballs2D.vert" />
     <None Include="bin\data\shaders\metaSolids.frag" />
