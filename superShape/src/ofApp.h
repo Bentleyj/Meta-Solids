@@ -1,0 +1,68 @@
+#pragma once
+
+#include "ofMain.h"
+#include "ofxGui.h"
+#define NUM_STEPS 100
+
+
+
+class ofApp : public ofBaseApp{
+
+	public:
+		void setup();
+		void update();
+		void draw();
+
+		void keyPressed(int key);
+		void keyReleased(int key);
+		void mouseMoved(int x, int y );
+		void mouseDragged(int x, int y, int button);
+		void mousePressed(int x, int y, int button);
+		void mouseReleased(int x, int y, int button);
+		void mouseEntered(int x, int y);
+		void mouseExited(int x, int y);
+		void windowResized(int w, int h);
+		void dragEvent(ofDragInfo dragInfo);
+		void gotMessage(ofMessage msg);
+
+		ofVec3f getPoint(float theta, float phi);
+		ofVec3f cartesianToSpherical(ofVec3f point);
+		float supershape(float theta, float m=1, float n1=1, float n2=1, float n3=1);
+		ofVec3f scaleColorToUniform(ofColor col);
+
+		ofShader light;
+
+		ofEasyCam cam;
+
+		ofMesh mesh;
+
+		ofMaterial mat;
+
+		ofVec3f globe[NUM_STEPS+1][NUM_STEPS+1];
+
+		ofxPanel lightGui;
+		ofxPanel supershapeGui;
+		ofParameterGroup lighting;
+
+		ofParameter<ofVec3f> lightPos;
+		ofParameter<ofColor> m_ambient;
+		ofParameter<ofColor> m_diffuse;
+		ofParameter<ofColor> m_specular;
+		ofParameter<float> shininess;
+		ofParameter<ofColor> l_ambient;
+		ofParameter<ofColor> l_diffuse;
+		ofParameter<ofColor> l_specular;
+
+		ofParameterGroup supershapeGroup1;
+		ofParameterGroup supershapeGroup2;
+
+		ofParameter<float> m1;
+		ofParameter<float> n11;
+		ofParameter<float> n21;
+		ofParameter<float> n31;
+
+		ofParameter<float> m2;
+		ofParameter<float> n12;
+		ofParameter<float> n22;
+		ofParameter<float> n32;
+};

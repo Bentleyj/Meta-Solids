@@ -61,7 +61,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	buffer.begin();
+	//buffer.begin();
 	metaballs.begin();
 	metaballs.setUniform2f("u_Resolution", ofGetWidth(), ofGetHeight());
 	metaballs.setUniform2f("u_Mouse", ofGetMouseX(), ofGetHeight() - ofGetMouseY());
@@ -72,20 +72,17 @@ void ofApp::draw(){
 	metaballs.setUniform4fv("u_BallPositions", (float*)&ballPositions[0], ballPositions.size());
 	ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
 	metaballs.end();
-	buffer.end();
+	//buffer.end();
 
-	maskShader.begin();
-	maskShader.setUniform2f("u_Resolution", ofGetWidth(), ofGetHeight());
-	maskShader.setUniformTexture("u_TextureMask", *(masks[maskIndex]), 0);
-	maskShader.setUniformTexture("u_TextureBackground", buffer.getTexture(), 1);
-	ofPushMatrix();
-	ofSetColor(255);
-	//ofScale(1, -1);
-	//ofTranslate(0, -ofGetHeight());
-	masks[maskIndex]->draw(0, 0);
-	//buffer.draw(0, 0);
-	ofPopMatrix();
-	maskShader.end();
+	//maskShader.begin();
+	//maskShader.setUniform2f("u_Resolution", ofGetWidth(), ofGetHeight());
+	//maskShader.setUniformTexture("u_TextureMask", *(masks[maskIndex]), 0);
+	//maskShader.setUniformTexture("u_TextureBackground", buffer.getTexture(), 1);
+	//ofPushMatrix();
+	//ofSetColor(255);
+	//masks[maskIndex]->draw(0, 0);
+	//ofPopMatrix();
+	//maskShader.end();
 
 	//gui.draw();
 
