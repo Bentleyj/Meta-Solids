@@ -8,12 +8,11 @@ void main(){
 	// get original vertex postion
 	vec4 pos = gl_Vertex;
 
+	position = vec3(gl_ModelViewMatrix * pos);
+
 	pos = gl_ProjectionMatrix * gl_ModelViewMatrix * pos;
 
-	position = vec3(pos);
-
 	normal = vec3(gl_NormalMatrix * gl_Normal);
-
 
 	//gl_FrontColor = (percentColor) * col1 + (1.0 - percentColor) * col2 + vec4(brightnessModifier);//col1;
 

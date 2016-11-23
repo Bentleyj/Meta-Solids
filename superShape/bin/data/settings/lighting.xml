@@ -1,11 +1,11 @@
 <Lighting>
 	<Lighting/>
 	<Light_Position>100, 100, 0</Light_Position>
-	<Material_Ambient>255, 71, 255, 255</Material_Ambient>
+	<Material_Ambient>255, 255, 255, 255</Material_Ambient>
 	<Material_Diffuse>255, 255, 255, 255</Material_Diffuse>
 	<Material_Specular>255, 255, 255, 255</Material_Specular>
 	<Material_Shininess>1</Material_Shininess>
-	<Light_Ambient>13, 247, 71, 255</Light_Ambient>
-	<Light_Diffuse>255, 12, 6, 255</Light_Diffuse>
-	<Light_Specular>255, 255, 255, 255</Light_Specular>
+	<Light_Ambient>0, 0, 0, 255</Light_Ambient>
+	<Light_Diffuse>255, 255, 255, 255</Light_Diffuse>
+	<Light_Specular>0, 255, 255, 255</Light_Specular>
 </Lighting>

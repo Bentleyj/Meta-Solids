@@ -29,6 +29,8 @@ class ofApp : public ofBaseApp{
 		ofVec3f cartesianToSpherical(ofVec3f point);
 		float supershape(float theta, float m, float n1, float n2, float n3);
 		ofVec3f scaleColorToUniform(ofColor col);
+		ofVec3f calculateFaceNormal(ofVec3f A, ofVec3f B, ofVec3f C);
+
 
 		ofShader light;
 
@@ -44,10 +46,13 @@ class ofApp : public ofBaseApp{
 		ofParameter<ofColor> m_ambient;
 		ofParameter<ofColor> m_diffuse;
 		ofParameter<ofColor> m_specular;
+		ofParameter<ofColor> m_emissive;
 		ofParameter<float> shininess;
 		ofParameter<ofColor> l_ambient;
 		ofParameter<ofColor> l_diffuse;
 		ofParameter<ofColor> l_specular;
+
+		ofParameter<int> step;
 
 		ofxPanel supershapeGui;
 

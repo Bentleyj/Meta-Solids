@@ -19,7 +19,7 @@ uniform float brightnessModifier = 0.0;
 void main() {
 
 	float dist = length(position-l_position);
-	float attenuation = 1.0 / 2.0;// (1.0 + 0.001*dist + 0.01*dist*dist);
+	float attenuation = 1.0 / 2.0;// (1.0 + 0.001*dist + 0.01*dist*dist);// ;
 	vec3 ambient = m_ambient*l_ambient;
 
 	vec3 lightPos = l_position;//(vec4(l_position, 1.0) * gl_ModelViewMatrix).xyz;
