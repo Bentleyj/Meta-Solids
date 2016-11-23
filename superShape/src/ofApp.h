@@ -27,7 +27,7 @@ class ofApp : public ofBaseApp{
 
 		ofVec3f getPoint(float theta, float phi);
 		ofVec3f cartesianToSpherical(ofVec3f point);
-		float supershape(float theta, float m=1, float n1=1, float n2=1, float n3=1);
+		float supershape(float theta, float m, float n1, float n2, float n3);
 		ofVec3f scaleColorToUniform(ofColor col);
 
 		ofShader light;
@@ -36,12 +36,8 @@ class ofApp : public ofBaseApp{
 
 		ofMesh mesh;
 
-		ofMaterial mat;
-
-		ofVec3f globe[NUM_STEPS+1][NUM_STEPS+1];
-
 		ofxPanel lightGui;
-		ofxPanel supershapeGui;
+
 		ofParameterGroup lighting;
 
 		ofParameter<ofVec3f> lightPos;
@@ -53,13 +49,16 @@ class ofApp : public ofBaseApp{
 		ofParameter<ofColor> l_diffuse;
 		ofParameter<ofColor> l_specular;
 
+		ofxPanel supershapeGui;
+
 		ofParameterGroup supershapeGroup1;
-		ofParameterGroup supershapeGroup2;
 
 		ofParameter<float> m1;
 		ofParameter<float> n11;
 		ofParameter<float> n21;
 		ofParameter<float> n31;
+
+		ofParameterGroup supershapeGroup2;
 
 		ofParameter<float> m2;
 		ofParameter<float> n12;

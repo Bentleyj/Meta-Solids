@@ -1,11 +1,11 @@
 #include "ofApp.h"
 
-#define NUM_STEPS 20
+#define NUM_STEPS 100
 
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-	cam.setPosition(0, 0, 20);
+	cam.setPosition(0, 0, 5);
 	float r = 50;
 
 	for (int i = 0; i < NUM_STEPS; i++) {
@@ -17,19 +17,15 @@ void ofApp::setup(){
 	}
 	for (int i = 0; i < NUM_STEPS - 1; i++) {
 		for (int j = 0; j < NUM_STEPS - 1; j++) {
-			mesh.addIndex((i + j*NUM_STEPS));               // 0
-			mesh.addIndex(((i + 1) + j*NUM_STEPS));           // 1
-			mesh.addIndex((i + (j + 1)*NUM_STEPS));           // 10
-
-			mesh.addIndex(((i + 1) + j*NUM_STEPS));           // 1
-			mesh.addIndex(((i + 1) + (j + 1)*NUM_STEPS));       // 11
-			mesh.addIndex((i + (j + 1)*NUM_STEPS));           // 10
+			mesh.addIndex((i + j*NUM_STEPS));               
+			mesh.addIndex(((i + 1) + j*NUM_STEPS));
 		}
 	}
 
 	mesh.setMode(OF_PRIMITIVE_LINE_LOOP);
 
-	gui.setup("GUI", "settings/settings.xml");
+	string lightSettingsFile = "settings/lighting.xml";
+	lightGui.setup("Lighting", lightSettingsFile);
 
 	lighting.setName("Lighting");
 	lighting.add(lightPos.set("Light Position", ofPoint(100, 100, 0), ofPoint(-200, -200, -200), ofPoint(200, 200, 200)));
@@ -41,22 +37,32 @@ void ofApp::setup(){
 	lighting.add(l_diffuse.set("Light Diffuse", ofColor(255)));
 	lighting.add(l_specular.set("Light Specular", ofColor(255)));
 
-	mat.setAmbientColor(m_ambient.get());
-	mat.setDiffuseColor(m_diffuse.get());
-	mat.setSpecularColor(m_specular.get());
+	lightGui.add(lighting);
 
-	supershapeGroup.add(m.set("M", 1, 0, 5));
-	supershapeGroup.add(n1.set("N1", 1, 0, 5));
-	supershapeGroup.add(n2.set("N2", 1, 0, 5));
-	supershapeGroup.add(n3.set("N3", 1, 0, 5));
+	lightGui.loadFromFile(lightSettingsFile);
 
-	//gui.add(lighting);
+	string supershapeSettingsFile = "settings/supershape.xml";
 
-	gui.add(supershapeGroup);
+	supershapeGui.setup("Supershape", supershapeSettingsFile);
 
-	//ofEnableLighting();
+	supershapeGroup1.add(m1.set("M", 1, 0, 20));
+	supershapeGroup1.add(n11.set("N1", 1, 0, 10));
+	supershapeGroup1.add(n21.set("N2", 1, 0, 10));
+	supershapeGroup1.add(n31.set("N3", 1, 0, 10));
 
-	//light.load("shaders/light");
+	supershapeGroup1.add(m2.set("M", 1, 0, 20));
+	supershapeGroup1.add(n12.set("N1", 1, 0, 10));
+	supershapeGroup1.add(n22.set("N2", 1, 0, 10));
+	supershapeGroup1.add(n32.set("N3", 1, 0, 10));
+
+	supershapeGui.add(supershapeGroup1);
+	supershapeGui.add(supershapeGroup2);
+
+	supershapeGui.setPosition(ofGetWidth() - supershapeGui.getWidth() - 10, 10);
+
+	supershapeGui.loadFromFile(supershapeSettingsFile);
+
+	light.load("shaders/light");
 
 	ofBackground(0);
 }
@@ -64,53 +70,57 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
 	mesh.clear();
-	for (int i = 0; i < NUM_STEPS; i++) {
+	for (int i = 0; i < NUM_STEPS+1; i++) {
 		float theta = ofMap(i, 0, NUM_STEPS, -PI, PI);
 		for (int j = 0; j < NUM_STEPS; j++) {
-			float phi = ofMap(j, 0, NUM_STEPS, -PI / 2, PI / 2);
+			float phi = ofMap(j, 0, NUM_STEPS-1, -PI / 2, PI / 2);
 			mesh.addVertex(50 * getPoint(theta, phi));
-			mesh.addColor(ofColor(255));
 		}
 	}
-	//for (int i = 0; i < NUM_STEPS - 1; i++) {
-	//	for (int j = 0; j < NUM_STEPS - 1; j++) {
-	//		mesh.addIndex((i + j*NUM_STEPS));               // 0
-	//		mesh.addIndex(((i + 1) + j*NUM_STEPS));           // 1
-	//		mesh.addIndex((i + (j + 1)*NUM_STEPS));           // 10
+	for (int i = 0; i < NUM_STEPS; i++) {
+		for (int j = 0; j < NUM_STEPS; j++) {
+			mesh.addIndex((i + j*NUM_STEPS));
+			mesh.addIndex(((i + 1) + j*NUM_STEPS));
+		}
+	}
 
-	//		mesh.addIndex(((i + 1) + j*NUM_STEPS));           // 1
-	//		mesh.addIndex(((i + 1) + (j + 1)*NUM_STEPS));       // 11
-	//		mesh.addIndex((i + (j + 1)*NUM_STEPS));           // 10
-	//	}
-	//}
+	float rollPercent = ofMap(cam.getRoll(), -90, 90, 0, 20);
+	float pitchPercent = ofMap(cam.getPitch(), -180, 180, 0, 20);
+
+	m1 = ofLerp(m1, rollPercent, 0.1);
+	m2 = ofLerp(m2, pitchPercent, 0.1);
+
+
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 	ofSetColor(255);
 	cam.begin();
-	//light.enable();
-	//mat.begin();
-	//light.begin();
-	//light.setUniform3f("l_position", lightPos);
-	//light.setUniform3f("l_ambient", scaleColorToUniform(l_ambient));
-	//light.setUniform3f("l_diffuse", scaleColorToUniform(l_diffuse));
-	//light.setUniform3f("l_specular", scaleColorToUniform(l_specular));
-	//light.setUniform3f("m_ambient", scaleColorToUniform(m_ambient));
-	//light.setUniform3f("m_diffuse", scaleColorToUniform(m_diffuse));
-	//light.setUniform3f("m_specular", scaleColorToUniform(m_specular));
-	//light.setUniform1f("shininess", shininess);
-	//ofDrawSphere(20);
+	ofEnableDepthTest();
+	light.begin();
+	light.setUniform3f("l_position", lightPos);
+	light.setUniform3f("l_ambient", scaleColorToUniform(l_ambient));
+	light.setUniform3f("l_diffuse", scaleColorToUniform(l_diffuse));
+	light.setUniform3f("l_specular", scaleColorToUniform(l_specular));
+	light.setUniform3f("m_ambient", scaleColorToUniform(m_ambient));
+	light.setUniform3f("m_diffuse", scaleColorToUniform(m_diffuse));
+	light.setUniform3f("m_specular", scaleColorToUniform(m_specular));
+	light.setUniform1f("shininess", shininess);
+	mesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
 	mesh.draw();
-	//mat.end();
-	//light.disable();
-	//light.draw();
-	//light.end();
+	light.end();
+	mesh.setMode(OF_PRIMITIVE_LINE_LOOP);
+	ofSetColor(255);
+	mesh.draw();
+	ofDrawAxis(100);
 	//ofTranslate(lightPos);
 	//ofDrawSphere(5);
 	cam.end();
 
-	gui.draw();
+	ofDisableDepthTest();
+	lightGui.draw();
+	supershapeGui.draw();
 }
 //--------------------------------------------------------------
 ofVec3f ofApp::scaleColorToUniform(ofColor col) {
@@ -131,9 +141,9 @@ ofVec3f ofApp::cartesianToSpherical(ofVec3f point) {
 
 //--------------------------------------------------------------
 ofVec3f ofApp::getPoint(float theta, float phi) {
-	float r1 = supershape(theta, m, n1, n2, n3);//supershape(theta, 7, 0.2, 1.7, 1.7);
-	float r2 = supershape(phi, m, n1, n2, n3);// supershape(phi, 7, 2, 1.7, 1.7);
-	float x = r1*supershape(theta)*cos(theta)*r2*cos(phi);
+	float r1 = supershape(theta, m1, n11, n21, n31);//supershape(theta, 7, 0.2, 1.7, 1.7);
+	float r2 = supershape(phi, m2, n12, n22, n32);// supershape(phi, 7, 2, 1.7, 1.7);
+	float x = r1*cos(theta)*r2*cos(phi);
 	float y = r1*sin(theta)*r2*cos(phi);
 	float z = r2*sin(phi);
 
@@ -145,7 +155,7 @@ float ofApp::supershape(float theta, float m, float n1, float n2, float n3) {
 	float a, b;
 	a = b = 1;
 
-	float r = pow(pow(w1 / a*cos(m * theta / 4)), n2) + pow(abs(1 / b*sin(m*theta / 4)), n3), -1 / n1);
+	float r = pow(pow(abs(1 / a*cos(m * theta / 4)), n2) + pow(abs(1 / b*sin(m*theta / 4)), n3), -1 / n1);
 
 	return r;
 }
