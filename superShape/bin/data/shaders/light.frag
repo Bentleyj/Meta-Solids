@@ -19,7 +19,7 @@ uniform float brightnessModifier = 0.0;
 void main() {
 
 	float dist = length(position-l_position);
-	float attenuation = 1.0 / 2.0;// (1.0 + 0.001*dist + 0.01*dist*dist);// ;
+	float attenuation = 1.0 / 6.0f;//(1.0 + 0.001*dist + 0.01*dist*dist);// ;
 	vec3 ambient = m_ambient*l_ambient;
 
 	vec3 lightPos = l_position;//(vec4(l_position, 1.0) * gl_ModelViewMatrix).xyz;
@@ -36,11 +36,13 @@ void main() {
 
 	vec3 surf2view = normalize(-position);
 	vec3 reflection = reflect(-surf2light, norm); //**//
-	float scont = pow(max(0.0, dot(surf2view, reflection)), shininess);
+	float scont = pow(1.0 - max(0.0, dot(surf2view, reflection)), shininess);
 
 	vec3 specular = scont * l_specular * m_specular;
 
 	vec4 colLit = vec4(ambient + diffuse + specular*attenuation, 1.0);
 	//vec4 colFlat = vec4(1.0, 1.0, 1.0, 1.0);
 	gl_FragColor = colLit;
+
+	//gl_FragColor = vec4(normal, 1.0);
 }

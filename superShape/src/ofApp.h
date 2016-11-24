@@ -31,7 +31,6 @@ class ofApp : public ofBaseApp{
 		ofVec3f scaleColorToUniform(ofColor col);
 		ofVec3f calculateFaceNormal(ofVec3f A, ofVec3f B, ofVec3f C);
 
-
 		ofShader light;
 
 		ofEasyCam cam;
@@ -52,9 +51,10 @@ class ofApp : public ofBaseApp{
 		ofParameter<ofColor> l_diffuse;
 		ofParameter<ofColor> l_specular;
 
-		ofParameter<int> step;
-
 		ofxPanel supershapeGui;
+		ofParameter<bool> drawNormals;
+
+		ofParameter<float> scale;
 
 		ofParameterGroup supershapeGroup1;
 
@@ -62,6 +62,9 @@ class ofApp : public ofBaseApp{
 		ofParameter<float> n11;
 		ofParameter<float> n21;
 		ofParameter<float> n31;
+		ofParameter<float> a1;
+		ofParameter<float> b1;
+
 
 		ofParameterGroup supershapeGroup2;
 
@@ -69,4 +72,7 @@ class ofApp : public ofBaseApp{
 		ofParameter<float> n12;
 		ofParameter<float> n22;
 		ofParameter<float> n32;
+		ofParameter<float> a2;
+		ofParameter<float> b2;
+
 };
