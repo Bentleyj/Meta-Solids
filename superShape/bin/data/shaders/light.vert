@@ -6,6 +6,8 @@
 varying vec3 normal;
 varying vec3 position;
 
+uniform float stepSize;
+
 uniform float scale;
 uniform float m1 = 0;
 uniform float n11 = 0.2f;
@@ -55,16 +57,16 @@ void main(){
 	// get original vertex postion
 	vec4 pos = gl_Vertex;
 
-	float r = 1.0;//length(vec3(pos.xyz));
+	float r = 1.0;
 	float theta = atan(pos.y, pos.x);// outputs of atan and acos are in the wrong range so we need to slide them back in to place!
 	float phi = acos(pos.z / r);
 	theta -= PI;
 	phi -= PI / 2;
 
-	float thetaPlus = theta + 1f/500f;
-	float phiPlus = phi + 1f/500f;
-	float thetaMinus = theta - 1f/500f;
-	float phiMinus = phi - 1f/500f;
+	float thetaPlus = theta + 1.0f/stepSize;
+	float phiPlus = phi + 1.0f/ stepSize;
+	float thetaMinus = theta - 1.0f/ stepSize;
+	float phiMinus = phi - 1.0f/ stepSize;
 
 	vec3 point = getPoint(theta, phi);
 	vec3 pointPlusTheta = getPoint(thetaPlus, phi);

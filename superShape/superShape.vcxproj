@@ -209,6 +209,7 @@
   <ItemGroup>
     <None Include="bin\data\shaders\light.frag" />
     <None Include="bin\data\shaders\light.vert" />
+    <None Include="bin\data\shaders\rimLight.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ProjectExtensions>

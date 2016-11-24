@@ -1,6 +1,6 @@
 #include "ofApp.h"
 
-#define NUM_STEPS 500
+#define NUM_STEPS 1000
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -18,7 +18,6 @@ void ofApp::setup(){
 	lighting.add(m_diffuse.set("Material Diffuse", ofColor(255)));
 	lighting.add(m_specular.set("Material Specular", ofColor(255)));
 	lighting.add(shininess.set("Material Shininess", 1.0, 0.0, 50.0));
-	//lighting.add(m_emissive.set("Material Emissive", ofColor(255)));
 	lighting.add(l_ambient.set("Light Ambient", ofColor(255)));
 	lighting.add(l_diffuse.set("Light Diffuse", ofColor(255)));
 	lighting.add(l_specular.set("Light Specular", ofColor(255)));
@@ -56,8 +55,12 @@ void ofApp::setup(){
 	supershapeGui.loadFromFile(supershapeSettingsFile);
 
 	light.load("shaders/light");
+	rimLight.load("shaders/light.vert", "shaders/rimLight.frag");
+	blur.load("shaders/blur");
 
 	ofBackground(0);
+
+	buffer.allocate(ofGetWidth(), ofGetHeight());
 }
 
 ofVec3f ofApp::calculateFaceNormal(ofVec3f A, ofVec3f B, ofVec3f C) {
@@ -71,14 +74,45 @@ ofVec3f ofApp::calculateFaceNormal(ofVec3f A, ofVec3f B, ofVec3f C) {
 void ofApp::update(){
 
 	float rollPercent = ofMap(cam.getRoll(), -90, 90, 0, 20);
-	float pitchPercent = ofMap(cam.getPitch(), -180, 180, 0, 20);
+	float pitchPercent = ofMap(cam.getPitch(), -180, 180, 1, 100);
 
-	m1 = ofLerp(m1, rollPercent, 0.1);
-	m2 = ofLerp(m2, pitchPercent, 0.1);
+	m2 = ofLerp(m2, rollPercent, 0.1);
+	n21 = ofLerp(n21, pitchPercent, 0.1);
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+
+	buffer.begin();
+	ofEnableDepthTest();
+	ofClear(255, 255, 255, 0);
+	cam.begin(); 
+	rimLight.begin();
+
+	rimLight.setUniform1f("m1", m1);
+	rimLight.setUniform1f("n11", n11);
+	rimLight.setUniform1f("n21", n21);
+	rimLight.setUniform1f("n31", n31);
+	rimLight.setUniform1f("a1", a1);
+	rimLight.setUniform1f("b1", b1);
+
+	rimLight.setUniform1f("m2", m2);
+	rimLight.setUniform1f("n12", n12);
+	rimLight.setUniform1f("n22", n22);
+	rimLight.setUniform1f("n32", n32);
+	rimLight.setUniform1f("a2", a2);
+	rimLight.setUniform1f("b2", b2);
+
+	rimLight.setUniform1f("scale", scale);
+
+	rimLight.setUniform1f("stepSize", NUM_STEPS);
+
+	mesh.draw();
+	rimLight.end();
+	cam.end();
+
+	buffer.end();
+
 	cam.begin();
 	ofEnableDepthTest();
 	light.begin();
@@ -107,7 +141,8 @@ void ofApp::draw(){
 	light.setUniform1f("shininess", shininess);
 	light.setUniform1f("scale", scale);
 
-	ofSetColor(255);
+	light.setUniform1f("stepSize", NUM_STEPS);
+
 	mesh.draw();
 
 	light.end();
@@ -119,6 +154,8 @@ void ofApp::draw(){
 	ofDisableDepthTest();
 	lightGui.draw();
 	supershapeGui.draw();
+	ofSetColor(255);
+	buffer.draw(0, 0);
 }
 //--------------------------------------------------------------
 ofVec3f ofApp::scaleColorToUniform(ofColor col) {

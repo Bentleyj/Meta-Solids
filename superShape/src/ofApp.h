@@ -32,6 +32,8 @@ class ofApp : public ofBaseApp{
 		ofVec3f calculateFaceNormal(ofVec3f A, ofVec3f B, ofVec3f C);
 
 		ofShader light;
+		ofShader rimLight;
+		ofShader blur;
 
 		ofEasyCam cam;
 
@@ -40,6 +42,8 @@ class ofApp : public ofBaseApp{
 		ofxPanel lightGui;
 
 		ofParameterGroup lighting;
+
+		ofFbo buffer;
 
 		ofParameter<ofVec3f> lightPos;
 		ofParameter<ofColor> m_ambient;
@@ -58,13 +62,12 @@ class ofApp : public ofBaseApp{
 
 		ofParameterGroup supershapeGroup1;
 
-		ofParameter<float> m1;
+		ofParameter<int> m1;
 		ofParameter<float> n11;
 		ofParameter<float> n21;
 		ofParameter<float> n31;
 		ofParameter<float> a1;
 		ofParameter<float> b1;
-
 
 		ofParameterGroup supershapeGroup2;
 
