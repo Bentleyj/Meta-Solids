@@ -2,8 +2,6 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
-#define NUM_STEPS 100
-
 
 
 class ofApp : public ofBaseApp{
@@ -33,7 +31,9 @@ class ofApp : public ofBaseApp{
 
 		ofShader light;
 		ofShader rimLight;
-		ofShader blur;
+		ofShader blurX;
+		ofShader blurY;
+		ofShader combine;
 
 		ofEasyCam cam;
 
@@ -43,7 +43,10 @@ class ofApp : public ofBaseApp{
 
 		ofParameterGroup lighting;
 
-		ofFbo buffer;
+		ofFbo rimBuffer;
+		ofFbo objectBuffer;
+		ofFbo blurBufferX;
+		ofFbo blurBufferY;
 
 		ofParameter<ofVec3f> lightPos;
 		ofParameter<ofColor> m_ambient;
@@ -54,6 +57,8 @@ class ofApp : public ofBaseApp{
 		ofParameter<ofColor> l_ambient;
 		ofParameter<ofColor> l_diffuse;
 		ofParameter<ofColor> l_specular;
+		ofParameter<float> blur;
+		ofParameter<bool> showGui;
 
 		ofxPanel supershapeGui;
 		ofParameter<bool> drawNormals;

@@ -97,5 +97,17 @@
     <None Include="bin\data\shaders\rimLight.frag">
       <Filter>data\shaders</Filter>
     </None>
+    <None Include="bin\data\shaders\blurX.frag">
+      <Filter>data\shaders</Filter>
+    </None>
+    <None Include="bin\data\shaders\blurY.frag">
+      <Filter>data\shaders</Filter>
+    </None>
+    <None Include="bin\data\shaders\dummy.vert">
+      <Filter>data\shaders</Filter>
+    </None>
+    <None Include="bin\data\shaders\combine.frag">
+      <Filter>data\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

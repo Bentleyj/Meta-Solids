@@ -207,6 +207,10 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="bin\data\shaders\blurX.frag" />
+    <None Include="bin\data\shaders\blurY.frag" />
+    <None Include="bin\data\shaders\combine.frag" />
+    <None Include="bin\data\shaders\dummy.vert" />
     <None Include="bin\data\shaders\light.frag" />
     <None Include="bin\data\shaders\light.vert" />
     <None Include="bin\data\shaders\rimLight.frag" />

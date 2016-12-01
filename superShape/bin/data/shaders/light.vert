@@ -49,10 +49,6 @@ vec3 getPoint(float theta, float phi) {
 	return vec3(x, y, z);
 }
 
-float map(float val, float inMin, float inMax, float outMin, float outMax) {
-	return outMin + (val - inMin) * (outMax - outMin) / (inMax - inMin);
-}
-
 void main(){
 	// get original vertex postion
 	vec4 pos = gl_Vertex;

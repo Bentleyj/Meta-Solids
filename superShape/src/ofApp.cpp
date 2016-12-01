@@ -9,6 +9,8 @@ void ofApp::setup(){
 
 	mesh = mesh.sphere(1, NUM_STEPS);
 
+	showGui = true;
+
 	string lightSettingsFile = "settings/lighting.xml";
 	lightGui.setup("Lighting", lightSettingsFile);
 
@@ -21,6 +23,7 @@ void ofApp::setup(){
 	lighting.add(l_ambient.set("Light Ambient", ofColor(255)));
 	lighting.add(l_diffuse.set("Light Diffuse", ofColor(255)));
 	lighting.add(l_specular.set("Light Specular", ofColor(255)));
+	lighting.add(blur.set("Rim Glow", 1, 0, 20));
 
 	lightGui.add(lighting);
 
@@ -30,6 +33,8 @@ void ofApp::setup(){
 
 	supershapeGui.setup("Supershape", supershapeSettingsFile);
 
+	supershapeGroup1.setName("Shape 1");
+
 	supershapeGroup1.add(m1.set("M", 1, 0, 20));
 	supershapeGroup1.add(n11.set("N1", 1, 0, 100));
 	supershapeGroup1.add(n21.set("N2", 1, 0, 100));
@@ -37,6 +42,7 @@ void ofApp::setup(){
 	supershapeGroup1.add(a1.set("A", 1, 0, 2));
 	supershapeGroup1.add(b1.set("B", 1, 0, 1));
 
+	supershapeGroup2.setName("Shape 2");
 
 	supershapeGroup2.add(m2.set("M", 1, 0, 20));
 	supershapeGroup2.add(n12.set("N1", 1, 0, 100));
@@ -56,11 +62,16 @@ void ofApp::setup(){
 
 	light.load("shaders/light");
 	rimLight.load("shaders/light.vert", "shaders/rimLight.frag");
-	blur.load("shaders/blur");
+	blurX.load("shaders/dummy.vert", "shaders/blurX.frag");
+	blurY.load("shaders/dummy.vert", "shaders/blurY.frag");
+	combine.load("shaders/dummy.vert", "shaders/combine.frag");
 
-	ofBackground(0);
+	ofBackground(229.5);
 
-	buffer.allocate(ofGetWidth(), ofGetHeight());
+	rimBuffer.allocate(ofGetWidth(), ofGetHeight());
+	objectBuffer.allocate(ofGetWidth(), ofGetHeight());
+	blurBufferX.allocate(ofGetWidth(), ofGetHeight());
+	blurBufferY.allocate(ofGetWidth(), ofGetHeight());
 }
 
 ofVec3f ofApp::calculateFaceNormal(ofVec3f A, ofVec3f B, ofVec3f C) {
@@ -73,48 +84,54 @@ ofVec3f ofApp::calculateFaceNormal(ofVec3f A, ofVec3f B, ofVec3f C) {
 //--------------------------------------------------------------
 void ofApp::update(){
 
-	float rollPercent = ofMap(cam.getRoll(), -90, 90, 0, 20);
-	float pitchPercent = ofMap(cam.getPitch(), -180, 180, 1, 100);
+	//float rollPercent = ofMap(cam.getRoll(), -90, 90, 0, 20);
+	//float pitchPercent = ofMap(cam.getPitch(), -180, 180, 1, 100);
 
-	m2 = ofLerp(m2, rollPercent, 0.1);
-	n21 = ofLerp(n21, pitchPercent, 0.1);
+	//m2 = ofLerp(m2, rollPercent, 0.1);
+	//n21 = ofLerp(n21, pitchPercent, 0.1);
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-	buffer.begin();
-	ofEnableDepthTest();
+	ofBackground(0);
+
+	//rimBuffer.begin();
+	//ofClear(255, 255, 255, 0);
+	//ofEnableDepthTest();
+	//cam.begin(); 
+	//rimLight.begin();
+
+	//rimLight.setUniform1f("m1", m1);
+	//rimLight.setUniform1f("n11", n11);
+	//rimLight.setUniform1f("n21", n21);
+	//rimLight.setUniform1f("n31", n31);
+	//rimLight.setUniform1f("a1", a1);
+	//rimLight.setUniform1f("b1", b1);
+
+	//rimLight.setUniform1f("m2", m2);
+	//rimLight.setUniform1f("n12", n12);
+	//rimLight.setUniform1f("n22", n22);
+	//rimLight.setUniform1f("n32", n32);
+	//rimLight.setUniform1f("a2", a2);
+	//rimLight.setUniform1f("b2", b2);
+
+	//rimLight.setUniform1f("scale", scale);
+
+	//rimLight.setUniform3f("l_ambient", scaleColorToUniform(l_ambient));
+
+	//rimLight.setUniform1f("stepSize", NUM_STEPS);
+
+	//mesh.draw();
+	//rimLight.end();
+	//cam.end();
+	//ofDisableDepthTest();
+	//rimBuffer.end();
+
+	objectBuffer.begin();
 	ofClear(255, 255, 255, 0);
-	cam.begin(); 
-	rimLight.begin();
-
-	rimLight.setUniform1f("m1", m1);
-	rimLight.setUniform1f("n11", n11);
-	rimLight.setUniform1f("n21", n21);
-	rimLight.setUniform1f("n31", n31);
-	rimLight.setUniform1f("a1", a1);
-	rimLight.setUniform1f("b1", b1);
-
-	rimLight.setUniform1f("m2", m2);
-	rimLight.setUniform1f("n12", n12);
-	rimLight.setUniform1f("n22", n22);
-	rimLight.setUniform1f("n32", n32);
-	rimLight.setUniform1f("a2", a2);
-	rimLight.setUniform1f("b2", b2);
-
-	rimLight.setUniform1f("scale", scale);
-
-	rimLight.setUniform1f("stepSize", NUM_STEPS);
-
-	mesh.draw();
-	rimLight.end();
-	cam.end();
-
-	buffer.end();
-
-	cam.begin();
 	ofEnableDepthTest();
+	cam.begin();
 	light.begin();
 	light.setUniform3f("l_position", lightPos);
 	light.setUniform3f("l_ambient", scaleColorToUniform(l_ambient));
@@ -144,18 +161,50 @@ void ofApp::draw(){
 	light.setUniform1f("stepSize", NUM_STEPS);
 
 	mesh.draw();
+	ofDrawAxis(100);
 
 	light.end();
 
-	ofDrawAxis(100);
-
 	cam.end();
+	ofDisableDepthTest();
+	objectBuffer.end();
 
 	ofDisableDepthTest();
-	lightGui.draw();
-	supershapeGui.draw();
 	ofSetColor(255);
-	buffer.draw(0, 0);
+
+	//blurBufferX.begin();
+	//ofClear(255, 255, 255, 0);
+	//blurX.begin();
+	//blurX.setUniform1f("blurAmnt", blur);
+	//rimBuffer.draw(0, 0);
+	//blurX.end();
+	//blurBufferX.end();
+
+	//blurBufferY.begin();
+	//ofClear(255, 255, 255, 0);
+	//blurY.begin();
+	//blurY.setUniform1f("blurAmnt", blur);
+	//blurBufferX.draw(0, 0);
+	//blurY.end();
+	//blurBufferY.end();
+
+	//combine.begin();
+	//combine.setUniformTexture("u_Object", objectBuffer.getTexture(), 0);
+	//combine.setUniformTexture("u_Rim", blurBufferY.getTexture(), 1);
+	//combine.setUniform2f("u_Res", ofVec2f(ofGetWidth(), ofGetHeight()));
+	//ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
+	//combine.end();
+
+	objectBuffer.draw(0, 0);
+
+	//blurBufferY.draw(0, 0);
+	//objectBuffer.draw(0, 0);
+	if(showGui) {
+		lightGui.draw();
+		supershapeGui.draw();
+	}
+
+
 }
 //--------------------------------------------------------------
 ofVec3f ofApp::scaleColorToUniform(ofColor col) {
@@ -200,6 +249,9 @@ float ofApp::supershape(float theta, float m, float n1, float n2, float n3) {
 void ofApp::keyPressed(int key){
 	if (key == 'f')
 		ofToggleFullscreen();
+	if (key == 'g') {
+		showGui = !showGui;
+	}
 }
 
 //--------------------------------------------------------------

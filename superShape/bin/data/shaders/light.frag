@@ -22,12 +22,12 @@ void main() {
 
 	vec3 lightPos = l_position;
 	vec3 surf2light;
-	if (gl_FrontFacing) {
+	//if (gl_FrontFacing) {
 		surf2light = normalize(position - lightPos);
-	}
-	else {
-		surf2light = normalize(lightPos - position);
-	}
+	//}
+	//else {
+		//surf2light = normalize(lightPos - position);
+	//}
 	vec3 norm = normalize(normal);
 	float dcont = max(0.0, dot(norm, surf2light));
 	vec3 diffuse = dcont * m_diffuse * l_diffuse;

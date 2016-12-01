@@ -6,4 +6,22 @@
 		<N3>11.7347</N3>
 	</group>
 <Supershape/>
+<Shape_1>
+		<M>0</M>
+		<N1>23.4694</N1>
+		<N2>100</N2>
+		<N3>67.8571</N3>
+		<A>1</A>
+		<B>1</B>
+	</Shape_1>
+	<Shape_2>
+		<M>20</M>
+		<N1>32.6531</N1>
+		<N2>0</N2>
+		<N3>56.6327</N3>
+		<A>1</A>
+		<B>1</B>
+	</Shape_2>
+	<Draw_Normals>0</Draw_Normals>
+	<Scale>49.51</Scale>
 </Supershape>
