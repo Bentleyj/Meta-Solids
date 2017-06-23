@@ -29,6 +29,8 @@ class ofApp : public ofBaseApp{
 		ofFbo buffer;
 
 		vector<ofImage*> masks;
+
+		ofVideoGrabber cam;
 		int maskIndex;
 		
 		ofxPanel gui;

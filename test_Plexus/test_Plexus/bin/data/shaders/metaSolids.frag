@@ -340,7 +340,6 @@ void main() {
 
 	// camera matrix
 	mat3 camMat = calcLookAtMatrix(camPos, camTar, 0.0);  // 0.0 is the camera camPosll
-
 												  // create view ray
 	vec3 viewRay = normalize(camMat * vec3(p.xy, 2.0)); // 2.0 is the lens length
 

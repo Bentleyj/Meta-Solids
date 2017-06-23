@@ -40,6 +40,7 @@ void ofApp::setup(){
 		float r = 5.0;
 		ballPositions.push_back(ofVec4f(x, y, z, r));
 	}
+	cam.setup(ofGetWidth(), ofGetHeight());
 }
 
 //--------------------------------------------------------------
@@ -57,6 +58,8 @@ void ofApp::update(){
 		noise += 0.1;
 		if (noise > 10.0) noise = 10.0;
 	}
+
+	cam.update();
 }
 
 //--------------------------------------------------------------
@@ -74,20 +77,24 @@ void ofApp::draw(){
 	metaballs.end();
 	//buffer.end();
 
+	//buffer.draw(0, 0);
+
 	//maskShader.begin();
 	//maskShader.setUniform2f("u_Resolution", ofGetWidth(), ofGetHeight());
-	//maskShader.setUniformTexture("u_TextureMask", *(masks[maskIndex]), 0);
+	//maskShader.setUniformTexture("u_TextureMask", cam.getTexture(), 0);
 	//maskShader.setUniformTexture("u_TextureBackground", buffer.getTexture(), 1);
 	//ofPushMatrix();
 	//ofSetColor(255);
-	//masks[maskIndex]->draw(0, 0);
+	//cam.draw(0, 0);
+	////ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
+	////masks[maskIndex]->draw(0, 0);
 	//ofPopMatrix();
 	//maskShader.end();
 
-	//gui.draw();
+	gui.draw();
 
-	//ofSetColor(0);
-	//ofDrawBitmapString(ofToString(ofGetFrameRate()), 20, ofGetHeight() - 20);
+	ofSetColor(0);
+	ofDrawBitmapString(ofToString(ofGetFrameRate()), 20, ofGetHeight() - 20);
 
 	//ofDrawBitmapString(ofToString(ofGetFrameRate()), 10, ofGetHeight() - 10.0);
 }
