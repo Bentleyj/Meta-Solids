@@ -23,6 +23,34 @@ uniform float n32 = 1.7f;
 uniform float a2 = 1.0f;
 uniform float b2 = 1.0f;
 
+uniform float time = 0.0f;
+uniform float speed = 1.0f;
+
+float mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
+vec4 mod289(vec4 x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
+vec4 perm(vec4 x){return mod289(((x * 34.0) + 1.0) * x);}
+
+float noise(vec3 p){
+    vec3 a = floor(p);
+    vec3 d = p - a;
+    d = d * d * (3.0 - 2.0 * d);
+
+    vec4 b = a.xxyy + vec4(0.0, 1.0, 0.0, 1.0);
+    vec4 k1 = perm(b.xyxy);
+    vec4 k2 = perm(k1.xyxy + b.zzww);
+
+    vec4 c = k2 + a.zzzz;
+    vec4 k3 = perm(c);
+    vec4 k4 = perm(c + 1.0);
+
+    vec4 o1 = fract(k3 * (1.0 / 41.0));
+    vec4 o2 = fract(k4 * (1.0 / 41.0));
+
+    vec4 o3 = o2 * d.z + o1 * (1.0 - d.z);
+    vec2 o4 = o3.yw * d.x + o3.xz * (1.0 - d.x);
+
+    return o4.y * d.y + o4.x * (1.0 - d.y);
+}
 //--------------------------------------------------------------
 float supershape(float theta, float m, float n1, float n2, float n3 ,float a, float b) {
 
@@ -40,8 +68,8 @@ vec3 calculateFaceNormal(vec3 A, vec3 B, vec3 C) {
 
 //--------------------------------------------------------------
 vec3 getPoint(float theta, float phi) {
-	float r1 = supershape(theta, m1, n11, n21, n31, a1, b1);
-	float r2 = supershape(phi, m2, n12, n22, n32, a2, b2);
+	float r1 = 1.0;//phi * m1;//sin(theta);//supershape(theta, m1, n11, n21, n31, a1, b1);
+	float r2 = 1.0;//cos(phi);//supershape(phi, m2, n12, n22, n32, a2, b2);
 	float x = r1*cos(theta)*r2*cos(phi);
 	float y = r1*sin(theta)*r2*cos(phi);
 	float z = r2*sin(phi);
@@ -81,6 +109,8 @@ void main(){
 
 	vec3 norm = faceNorm1 + faceNorm2 + faceNorm3 + faceNorm4 + faceNorm5 + faceNorm6;
 	norm *= -1;
+
+	point *= noise(point + vec3(time) * speed);
 
 	pos.xyz = point * scale;
 

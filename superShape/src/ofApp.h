@@ -64,6 +64,7 @@ class ofApp : public ofBaseApp{
 		ofParameter<bool> drawNormals;
 
 		ofParameter<float> scale;
+        ofParameter<float> speed;
 
 		ofParameterGroup supershapeGroup1;
 

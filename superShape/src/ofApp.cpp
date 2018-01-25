@@ -55,8 +55,9 @@ void ofApp::setup(){
 	supershapeGui.add(supershapeGroup2);
 	supershapeGui.add(drawNormals.set("Draw Normals", false));
 	supershapeGui.add(scale.set("Scale", 20.0, 1.0, 100.0));
+    supershapeGui.add(speed.set("Speed", 1.0, 0.0, 2.0));
 
-	supershapeGui.setPosition(ofGetWidth() - supershapeGui.getWidth() - 10, 10);
+	supershapeGui.setPosition(100 + supershapeGui.getWidth() - 10, 10);
 
 	supershapeGui.loadFromFile(supershapeSettingsFile);
 
@@ -84,11 +85,13 @@ ofVec3f ofApp::calculateFaceNormal(ofVec3f A, ofVec3f B, ofVec3f C) {
 //--------------------------------------------------------------
 void ofApp::update(){
 
-	//float rollPercent = ofMap(cam.getRoll(), -90, 90, 0, 20);
-	//float pitchPercent = ofMap(cam.getPitch(), -180, 180, 1, 100);
+    /*
+	float rollPercent = ofMap(cam.getRoll(), -90, 90, 0, 20);
+	float pitchPercent = ofMap(cam.getPitch(), -180, 180, 1, 100);
 
-	//m2 = ofLerp(m2, rollPercent, 0.1);
-	//n21 = ofLerp(n21, pitchPercent, 0.1);
+	m2 = ofLerp(m2, rollPercent, 0.3);
+	n22 = ofLerp(n22, pitchPercent, 0.3);
+     */
 }
 
 //--------------------------------------------------------------
@@ -157,11 +160,13 @@ void ofApp::draw(){
 
 	light.setUniform1f("shininess", shininess);
 	light.setUniform1f("scale", scale);
+    light.setUniform1f("time", ofGetElapsedTimef());
+    light.setUniform1f("speed", speed);
 
 	light.setUniform1f("stepSize", NUM_STEPS);
 
 	mesh.draw();
-	ofDrawAxis(100);
+	//ofDrawAxis(100);
 
 	light.end();
 

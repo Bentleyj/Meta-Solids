@@ -1,13 +1,13 @@
 <Lighting>
 	<Lighting/>
-	<Light_Position>0, 0, 0</Light_Position>
-	<Material_Ambient>86, 0, 0, 255</Material_Ambient>
-	<Material_Diffuse>30, 50, 255, 255</Material_Diffuse>
-	<Material_Specular>255, 255, 255, 255</Material_Specular>
+	<Light_Position>-174.844, -200, 129.196</Light_Position>
+	<Material_Ambient>237, 172, 67, 255</Material_Ambient>
+	<Material_Diffuse>135, 148, 24, 255</Material_Diffuse>
+	<Material_Specular>110, 0, 0, 255</Material_Specular>
 	<Material_Shininess>50</Material_Shininess>
 	<Light_Ambient>255, 255, 255, 255</Light_Ambient>
-	<Light_Diffuse>255, 255, 255, 255</Light_Diffuse>
-	<Light_Specular>41, 255, 168, 255</Light_Specular>
+	<Light_Diffuse>81, 170, 106, 255</Light_Diffuse>
+	<Light_Specular>255, 255, 255, 255</Light_Specular>
 <Material_Emissive>255, 255, 255, 255</Material_Emissive>
-<Rim_Glow>1.53061</Rim_Glow>
+<Rim_Glow>0</Rim_Glow>
 </Lighting>

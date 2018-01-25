@@ -10,5 +10,5 @@ void main() {
 	vec4 col1 = texture2DRect(u_TextureMask, vec2((p.x) * u_Resolution.x, (1.0 - p.y) * u_Resolution.y));
 	vec4 col2 = texture2DRect(u_TextureBackground, p * u_Resolution);
 
-	gl_FragColor = vec4(col1.x, col2.yz, 1.);
+	gl_FragColor = vec4(col1.x, col2.yz, 1.0);//vec4(col1.x, col2.yz, 1.);
 }
