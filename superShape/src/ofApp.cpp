@@ -75,6 +75,9 @@ void ofApp::setup(){
 	objectBuffer.allocate(ofGetWidth(), ofGetHeight());
 	blurBufferX.allocate(ofGetWidth(), ofGetHeight());
 	blurBufferY.allocate(ofGetWidth(), ofGetHeight());
+    
+    ofHttpResponse resp = ofLoadURL("http://api.openweathermap.org/data/2.5/weather?q=London,uk&appid=e69f027f111c4b9f3d7c5cef5da1c8a7");
+    cout<<resp.data<<endl;
 }
 
 ofVec3f ofApp::calculateFaceNormal(ofVec3f A, ofVec3f B, ofVec3f C) {
@@ -86,6 +89,7 @@ ofVec3f ofApp::calculateFaceNormal(ofVec3f A, ofVec3f B, ofVec3f C) {
 
 //--------------------------------------------------------------
 void ofApp::update(){
+
 
     /*
 	float rollPercent = ofMap(cam.getRoll(), -90, 90, 0, 20);
@@ -100,38 +104,6 @@ void ofApp::update(){
 void ofApp::draw(){
 
 	ofBackground(0);
-
-	//rimBuffer.begin();
-	//ofClear(255, 255, 255, 0);
-	//ofEnableDepthTest();
-	//cam.begin(); 
-	//rimLight.begin();
-
-	//rimLight.setUniform1f("m1", m1);
-	//rimLight.setUniform1f("n11", n11);
-	//rimLight.setUniform1f("n21", n21);
-	//rimLight.setUniform1f("n31", n31);
-	//rimLight.setUniform1f("a1", a1);
-	//rimLight.setUniform1f("b1", b1);
-
-	//rimLight.setUniform1f("m2", m2);
-	//rimLight.setUniform1f("n12", n12);
-	//rimLight.setUniform1f("n22", n22);
-	//rimLight.setUniform1f("n32", n32);
-	//rimLight.setUniform1f("a2", a2);
-	//rimLight.setUniform1f("b2", b2);
-
-	//rimLight.setUniform1f("scale", scale);
-
-	//rimLight.setUniform3f("l_ambient", scaleColorToUniform(l_ambient));
-
-	//rimLight.setUniform1f("stepSize", NUM_STEPS);
-
-	//mesh.draw();
-	//rimLight.end();
-	//cam.end();
-	//ofDisableDepthTest();
-	//rimBuffer.end();
 
 	objectBuffer.begin();
 	ofClear(255, 255, 255, 0);
@@ -171,7 +143,6 @@ void ofApp::draw(){
 	light.setUniform1f("stepSize", NUM_STEPS);
 
 	mesh.draw();
-	//ofDrawAxis(100);
 
 	light.end();
 
@@ -182,33 +153,8 @@ void ofApp::draw(){
 	ofDisableDepthTest();
 	ofSetColor(255);
 
-	//blurBufferX.begin();
-	//ofClear(255, 255, 255, 0);
-	//blurX.begin();
-	//blurX.setUniform1f("blurAmnt", blur);
-	//rimBuffer.draw(0, 0);
-	//blurX.end();
-	//blurBufferX.end();
-
-	//blurBufferY.begin();
-	//ofClear(255, 255, 255, 0);
-	//blurY.begin();
-	//blurY.setUniform1f("blurAmnt", blur);
-	//blurBufferX.draw(0, 0);
-	//blurY.end();
-	//blurBufferY.end();
-
-	//combine.begin();
-	//combine.setUniformTexture("u_Object", objectBuffer.getTexture(), 0);
-	//combine.setUniformTexture("u_Rim", blurBufferY.getTexture(), 1);
-	//combine.setUniform2f("u_Res", ofVec2f(ofGetWidth(), ofGetHeight()));
-	//ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
-	//combine.end();
-
 	objectBuffer.draw(0, 0);
 
-	//blurBufferY.draw(0, 0);
-	//objectBuffer.draw(0, 0);
 	if(showGui) {
 		lightGui.draw();
 		supershapeGui.draw();
