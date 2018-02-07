@@ -31,9 +31,7 @@ class ofApp : public ofBaseApp{
 
 		ofShader light;
 		ofShader rimLight;
-		ofShader blurX;
-		ofShader blurY;
-		ofShader combine;
+		ofShader blurShader;
 
 		ofEasyCam cam;
 
@@ -45,8 +43,7 @@ class ofApp : public ofBaseApp{
 
 		ofFbo rimBuffer;
 		ofFbo objectBuffer;
-		ofFbo blurBufferX;
-		ofFbo blurBufferY;
+		ofFbo blurBuffer;
 
 		ofParameter<ofVec3f> lightPos;
 		ofParameter<ofColor> m_ambient;

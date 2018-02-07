@@ -65,19 +65,18 @@ void ofApp::setup(){
 
 	light.load("shaders/light");
 	rimLight.load("shaders/light.vert", "shaders/rimLight.frag");
-	blurX.load("shaders/dummy.vert", "shaders/blurX.frag");
-	blurY.load("shaders/dummy.vert", "shaders/blurY.frag");
-	combine.load("shaders/dummy.vert", "shaders/combine.frag");
+	blurShader.load("shaders/blur");
 
 	ofBackground(229.5);
 
 	rimBuffer.allocate(ofGetWidth(), ofGetHeight());
 	objectBuffer.allocate(ofGetWidth(), ofGetHeight());
-	blurBufferX.allocate(ofGetWidth(), ofGetHeight());
-	blurBufferY.allocate(ofGetWidth(), ofGetHeight());
+	blurBuffer.allocate(ofGetWidth(), ofGetHeight());
     
     ofHttpResponse resp = ofLoadURL("http://api.openweathermap.org/data/2.5/weather?q=London,uk&appid=e69f027f111c4b9f3d7c5cef5da1c8a7");
     cout<<resp.data<<endl;
+    
+    ofEnableAntiAliasing();
 }
 
 ofVec3f ofApp::calculateFaceNormal(ofVec3f A, ofVec3f B, ofVec3f C) {
@@ -152,8 +151,14 @@ void ofApp::draw(){
 
 	ofDisableDepthTest();
 	ofSetColor(255);
-
-	objectBuffer.draw(0, 0);
+    
+    blurShader.begin();
+    blurShader.setUniform2f("resolution", objectBuffer.getWidth(), objectBuffer.getHeight());
+    blurShader.setUniformTexture("inputTexture", objectBuffer.getTexture(), 0);
+    ofDrawRectangle(0, 0, objectBuffer.getWidth(), objectBuffer.getHeight());
+	//objectBuffer.draw(0, 0);
+    
+    blurShader.end();
 
 	if(showGui) {
 		lightGui.draw();
