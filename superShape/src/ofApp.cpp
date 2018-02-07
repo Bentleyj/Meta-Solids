@@ -15,7 +15,7 @@ void ofApp::setup(){
 	lightGui.setup("Lighting", lightSettingsFile);
 
 	lighting.setName("Lighting");
-	lighting.add(lightPos.set("Light Position", ofPoint(0, 0, 0), ofPoint(-200, -200, -200), ofPoint(200, 200, 200)));
+	lighting.add(lightPos.set("Light Position", ofPoint(0, 0, 0), ofPoint(-500, -500, -500), ofPoint(500, 500, 500)));
 	lighting.add(m_ambient.set("Material Ambient", ofColor(255)));
 	lighting.add(m_diffuse.set("Material Diffuse", ofColor(255)));
 	lighting.add(m_specular.set("Material Specular", ofColor(255)));
@@ -56,6 +56,8 @@ void ofApp::setup(){
 	supershapeGui.add(drawNormals.set("Draw Normals", false));
 	supershapeGui.add(scale.set("Scale", 20.0, 1.0, 100.0));
     supershapeGui.add(speed.set("Speed", 1.0, 0.0, 2.0));
+    supershapeGui.add(noiseScale.set("Noise Scale", 1.0, 0.0, 2.0));
+    supershapeGui.add(noiseResolution.set("Noise Resolution", 1.0, 0.0, 20.0));
 
 	supershapeGui.setPosition(100 + supershapeGui.getWidth() - 10, 10);
 
@@ -162,6 +164,9 @@ void ofApp::draw(){
 	light.setUniform1f("scale", scale);
     light.setUniform1f("time", ofGetElapsedTimef());
     light.setUniform1f("speed", speed);
+    light.setUniform1f("noiseScale", noiseScale);
+    light.setUniform1f("noiseResolution", noiseResolution);
+
 
 	light.setUniform1f("stepSize", NUM_STEPS);
 

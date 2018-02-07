@@ -65,6 +65,8 @@ class ofApp : public ofBaseApp{
 
 		ofParameter<float> scale;
         ofParameter<float> speed;
+        ofParameter<float> noiseScale;
+        ofParameter<float> noiseResolution;
 
 		ofParameterGroup supershapeGroup1;
 

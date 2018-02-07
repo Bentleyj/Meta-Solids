@@ -25,6 +25,8 @@ uniform float b2 = 1.0f;
 
 uniform float time = 0.0f;
 uniform float speed = 1.0f;
+uniform float noiseScale = 1.0f;
+uniform float noiseResolution = 1.0f;
 
 float mod289(float x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
 vec4 mod289(vec4 x){return x - floor(x * (1.0 / 289.0)) * 289.0;}
@@ -51,6 +53,7 @@ float noise(vec3 p){
 
     return o4.y * d.y + o4.x * (1.0 - d.y);
 }
+
 //--------------------------------------------------------------
 float supershape(float theta, float m, float n1, float n2, float n3 ,float a, float b) {
 
@@ -64,6 +67,10 @@ vec3 calculateFaceNormal(vec3 A, vec3 B, vec3 C) {
 	EB = B - A;
 	EC = C - A;
 	return cross(EB, EC);
+}
+
+float reScale(float value, float minOld, float maxOld, float minNew, float maxNew) {
+    return ((value - minOld) / (maxOld - minOld)) * (maxNew - minNew) + minNew;
 }
 
 //--------------------------------------------------------------
@@ -99,7 +106,7 @@ void main(){
 	vec3 pointMinusPhi = getPoint(theta, phiMinus);
 	vec3 pointPlusThetaMinusPhi = getPoint(thetaPlus, phiMinus);
 	vec3 pointMinusThetaPlusPhi = getPoint(thetaMinus, phiPlus);
-
+    
 	vec3 faceNorm1 = calculateFaceNormal(point, pointMinusPhi, pointPlusThetaMinusPhi);
 	vec3 faceNorm2 = calculateFaceNormal(point, pointPlusThetaMinusPhi, pointPlusTheta);
 	vec3 faceNorm3 = calculateFaceNormal(point, pointPlusTheta, pointPlusPhi);
@@ -109,8 +116,10 @@ void main(){
 
 	vec3 norm = faceNorm1 + faceNorm2 + faceNorm3 + faceNorm4 + faceNorm5 + faceNorm6;
 	norm *= -1;
-
-	point *= noise(point + vec3(time) * speed);
+    
+    vec3 offset = vec3(reScale(noise(point * noiseResolution + vec3(time) * speed), 0.0, 1.0, 0.0, noiseScale));
+        
+    point += point * offset;
 
 	pos.xyz = point * scale;
 

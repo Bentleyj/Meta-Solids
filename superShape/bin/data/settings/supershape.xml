@@ -4,6 +4,27 @@
 		<N1>11.2245</N1>
 		<N2>14.2857</N2>
 		<N3>11.7347</N3>
+	<Shape_1>
+			<M>1</M>
+			<N1>1</N1>
+			<N2>1</N2>
+			<N3>1</N3>
+			<A>1</A>
+			<B>1</B>
+		</Shape_1>
+		<Shape_2>
+			<M>1</M>
+			<N1>1</N1>
+			<N2>1</N2>
+			<N3>1</N3>
+			<A>1</A>
+			<B>1</B>
+		</Shape_2>
+		<Draw_Normals>0</Draw_Normals>
+		<Scale>80.695</Scale>
+		<Speed>0.09</Speed>
+		<Noise_Scale>2</Noise_Scale>
+		<Noise_Resolution>1</Noise_Resolution>
 	</group>
 <Supershape/>
 <Shape_1>

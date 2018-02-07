@@ -10,4 +10,17 @@
 	<Light_Specular>255, 255, 255, 255</Light_Specular>
 <Material_Emissive>255, 255, 255, 255</Material_Emissive>
 <Rim_Glow>0</Rim_Glow>
+<group>
+		<Lighting>
+			<Light_Position>0, 0, 0</Light_Position>
+			<Material_Ambient>74, 51, 73, 255</Material_Ambient>
+			<Material_Diffuse>255, 255, 255, 255</Material_Diffuse>
+			<Material_Specular>0, 0, 4, 255</Material_Specular>
+			<Material_Shininess>2.04082</Material_Shininess>
+			<Light_Ambient>255, 255, 255, 255</Light_Ambient>
+			<Light_Diffuse>255, 255, 255, 255</Light_Diffuse>
+			<Light_Specular>0, 0, 0, 255</Light_Specular>
+			<Rim_Glow>1</Rim_Glow>
+		</Lighting>
+	</group>
 </Lighting>
