@@ -21,10 +21,10 @@
 			<B>1</B>
 		</Shape_2>
 		<Draw_Normals>0</Draw_Normals>
-		<Scale>80.695</Scale>
+		<Scale>100</Scale>
 		<Speed>0.09</Speed>
-		<Noise_Scale>2</Noise_Scale>
-		<Noise_Resolution>1</Noise_Resolution>
+		<Noise_Scale>0.12</Noise_Scale>
+		<Noise_Resolution>16.2</Noise_Resolution>
 	</group>
 <Supershape/>
 <Shape_1>
