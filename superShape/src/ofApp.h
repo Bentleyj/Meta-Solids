@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
-
+#include "ofxNestedFileLoader.h"
 
 class ofApp : public ofBaseApp{
 
@@ -28,13 +28,25 @@ class ofApp : public ofBaseApp{
 		float supershape(float theta, float m, float n1, float n2, float n3);
 		ofVec3f scaleColorToUniform(ofColor col);
 		ofVec3f calculateFaceNormal(ofVec3f A, ofVec3f B, ofVec3f C);
+    
+        vector<ofColor> getColorsFromImage(ofImage img);
+    
+        void drawColors(vector<ofColor> cols, int _x, int _y);
+    
+        void applyColorsToSupershape(vector<ofColor> cols);
+    
+        ofImage img;
+        int imgIndex;
+        vector<string> imagePaths;
+    
+        vector<ofColor> cols;
 
 		ofShader light;
 		ofShader rimLight;
 		ofShader blurShader;
 
 		ofEasyCam cam;
-
+ 
 		ofMesh mesh;
 
 		ofxPanel lightGui;

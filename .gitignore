@@ -1,53 +1,52 @@
-# project specific
+/bin/*  
+!/bin/data/   
+[Bb]uild/ 
+[Oo]bj/    
+*.o     
+[Dd]ebug*/   
+[Rr]elease*/   
+*.mode*  
+*.app/     
+*.pyc   
+.svn/   
+*.log      
 
-# ignore core oF files that we dont want to track
-libs/*
-other/*
-scripts/*
-examples/*
-addons/ofx3DModelLoader
-addons/ofxAssimpModelLoader
-addons/ofxGui
-addons/ofxKinect
-addons/ofxNetwork
-addons/ofxOpenCv
-addons/ofxOsc
-addons/ofxSvg
-addons/ofxThreadedImageLoader
-addons/ofxVectorGraphics
-addons/ofxXmlSettings
-
-export/*
-projectGenerator_osx/*
-
-# OF-specific ignore patterns
-openFrameworks.a
-openFrameworksDebug.a
-openFrameworksUniversal.a
-
-# Some general ignore patterns
-build/
-obj/
-*.o
-Debug*/
-Release*/
-*.mode*
-*.app/
-*.pyc
-
-# IDE-specific ignore patterns
 #XCode
-*.pbxuser
-*.perspective
-*.perspectivev3
-*.mode1v3
-*.mode2v3
-#XCode 4
-xcuserdata
+*.pbxuser  
+*.perspective 
+*.perspectivev3  
+*.mode1v3 
+*.mode2v3   
+# XCode 4  
+xcuserdata  
 *.xcworkspace
 
-# OS-specific ignore patterns
-#OSX
+# Code::Blocks
+*.depend  
+*.layout    
+
+# Visual Studio
+*.sdf 
+*.opensdf 
+*.suo  
+*.pdb 
+*.ilk 
+*.aps  
+ipch/  
+
+# Eclipse
+.metadata    
+local.properties 
+.externalToolBuilders
+
+# Linux
+*~
+
+# KDE
+.directory
+.AppleDouble
+
+# OSX
 .DS_Store
 *.swp
 *~.nib
@@ -55,27 +54,60 @@ xcuserdata
 ._*
 
 #Windows
-# Windows image file caches
+#Image file Caches
 Thumbs.db
-*.sdf
-*.opensdf
-*.suo
-*.pdb
-*.ilk
-*.aps
-ipch/
-*.exp
-*.lib
-
-*.exe
-*.db
-*.opendb
-
-*.dll
-
 # Folder config file
 Desktop.ini
 
-# data folders I don't want to track
-fonts/
-images/
+#Android
+.csettings
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Content
+*.mov
+*.mp3
+*.jpg
+*.png
+*.jpeg
+*.jpg
+*.gif
+*.avi
+
+# Visual C++ cache files
+ipch/
+*.aps
+*.ncb
+*.opendb
+*.opensdf
+*.sdf
+*.cachefile
+*.VC.db
+*.VC.VC.opendb

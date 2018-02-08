@@ -3,6 +3,30 @@
 #define NUM_STEPS 1000
 
 //--------------------------------------------------------------
+float getColorDistance(ofColor col1, ofColor col2) {
+    float r = col2.r - col1.r;
+    float g = col2.g - col1.g;
+    float b = col2.b - col1.b;
+    
+    float dist = sqrt(r*r + g*g + b*b);
+    
+    return dist;
+}
+
+//--------------------------------------------------------------
+ofColor getBlendedColor(ofColor col1, int w1, ofColor col2, int w2) {
+    float r = col2.r * w2 + col1.r * w1;
+    float g = col2.g * w2 + col1.g * w1;
+    float b = col2.b * w2 + col1.b * w1;
+    
+    r /= (w1 + w2);
+    g /= (w1 + w2);
+    b /= (w1 + w2);
+
+    return ofColor(r, g, b);
+}
+
+//--------------------------------------------------------------
 void ofApp::setup(){
 
 	cam.setPosition(0, 0, 5);
@@ -76,9 +100,19 @@ void ofApp::setup(){
     ofHttpResponse resp = ofLoadURL("http://api.openweathermap.org/data/2.5/weather?q=London,uk&appid=e69f027f111c4b9f3d7c5cef5da1c8a7");
     cout<<resp.data<<endl;
     
+<<<<<<< Updated upstream
+=======
+    ofxNestedFileLoader loader;
+    imagePaths = loader.load("sunrisekingdomimages");
+    
+    img.load(imagePaths[0]);
+    imgIndex = 0;
+    
+>>>>>>> Stashed changes
     ofEnableAntiAliasing();
 }
 
+//--------------------------------------------------------------
 ofVec3f ofApp::calculateFaceNormal(ofVec3f A, ofVec3f B, ofVec3f C) {
 	ofVec3f EB, EC;
 	EB = B - A;
@@ -88,6 +122,7 @@ ofVec3f ofApp::calculateFaceNormal(ofVec3f A, ofVec3f B, ofVec3f C) {
 
 //--------------------------------------------------------------
 void ofApp::update(){
+<<<<<<< Updated upstream
 
 
     /*
@@ -97,11 +132,14 @@ void ofApp::update(){
 	m2 = ofLerp(m2, rollPercent, 0.3);
 	n22 = ofLerp(n22, pitchPercent, 0.3);
      */
+=======
+    
+>>>>>>> Stashed changes
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+    
 	ofBackground(0);
 
 	objectBuffer.begin();
@@ -138,7 +176,6 @@ void ofApp::draw(){
     light.setUniform1f("noiseScale", noiseScale);
     light.setUniform1f("noiseResolution", noiseResolution);
 
-
 	light.setUniform1f("stepSize", NUM_STEPS);
 
 	mesh.draw();
@@ -152,6 +189,7 @@ void ofApp::draw(){
 	ofDisableDepthTest();
 	ofSetColor(255);
     
+<<<<<<< Updated upstream
     blurShader.begin();
     blurShader.setUniform2f("resolution", objectBuffer.getWidth(), objectBuffer.getHeight());
     blurShader.setUniformTexture("inputTexture", objectBuffer.getTexture(), 0);
@@ -159,14 +197,38 @@ void ofApp::draw(){
 	//objectBuffer.draw(0, 0);
     
     blurShader.end();
+=======
+   //  blurShader.begin();
+    //blurShader.setUniform2f("resolution", objectBuffer.getWidth(), objectBuffer.getHeight());
+   // blurShader.setUniformTexture("inputTexture", objectBuffer.getTexture(), 0);
+    //ofDrawRectangle(0, 0, objectBuffer.getWidth(), objectBuffer.getHeight());
+    objectBuffer.draw(0, 0);
+    //blurShader.end();
+>>>>>>> Stashed changes
 
 	if(showGui) {
 		lightGui.draw();
 		supershapeGui.draw();
+        img.draw(ofGetWidth() - img.getWidth()/10, 0, img.getWidth()/10, img.getHeight()/10);
+        drawColors(cols, ofGetWidth() - img.getWidth()/10, img.getHeight()/10);
 	}
-
-
 }
+
+//--------------------------------------------------------------
+void ofApp::drawColors(vector<ofColor> cols, int _x, int _y) {
+    float x = _x;
+    float y = _y;
+    for(int i = 0; i < cols.size(); i++) {
+        ofSetColor(cols[i]);
+        ofDrawRectangle(x, y, 20, 20);
+        x += 20;
+        if(x > ofGetWidth()) {
+            x = _x;
+            y += 20;
+        }
+    }
+}
+
 //--------------------------------------------------------------
 ofVec3f ofApp::scaleColorToUniform(ofColor col) {
 	float r = ofMap(col.r, 0, 255, 0, 1);
@@ -174,7 +236,6 @@ ofVec3f ofApp::scaleColorToUniform(ofColor col) {
 	float b = ofMap(col.b, 0, 255, 0, 1);
 	return ofVec3f(r, g, b);
 }
-
 
 //--------------------------------------------------------------
 ofVec3f ofApp::cartesianToSpherical(ofVec3f point) {
@@ -205,14 +266,85 @@ float ofApp::supershape(float theta, float m, float n1, float n2, float n3) {
 	return r;
 }
 
-
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 	if (key == 'f')
 		ofToggleFullscreen();
-	if (key == 'g') {
+	if (key == 'g')
 		showGui = !showGui;
-	}
+    if(key == OF_KEY_RIGHT) {
+        imgIndex++;
+        imgIndex %= imagePaths.size();
+        img.load(imagePaths[imgIndex]);
+        cols = getColorsFromImage(img);
+        applyColorsToSupershape(cols);
+    }
+    if(key == OF_KEY_LEFT) {
+        imgIndex--;
+        if(imgIndex < 0)
+            imgIndex = imagePaths.size() - 1;
+        img.load(imagePaths[imgIndex]);
+        cols = getColorsFromImage(img);
+        applyColorsToSupershape(cols);
+    }
+}
+
+//--------------------------------------------------------------
+vector<ofColor> ofApp::getColorsFromImage(ofImage img) {
+    vector<pair<ofColor, int>> colorBins;
+    
+    float distTolerance = 30.0;
+    
+    for (int x = 0; x < img.getWidth(); x += img.getWidth()/100) {
+        for (int y = 0; y < img.getHeight(); y += img.getHeight() / 100) {
+            ofColor col = img.getColor(x, y);
+            bool binned = false;
+            for (auto it = colorBins.begin(); it != colorBins.end(); it++) {
+                if (getColorDistance(col, it->first) < distTolerance) {
+                    it->first = getBlendedColor(it->first, it->second, col, 1);
+                    it->second++;
+                    binned = true;
+                    break;
+                }
+            }
+            if (!binned) {
+                // Create new bin
+                pair<ofColor, int> p;
+                p.first = col;
+                p.second = 1;
+                colorBins.push_back(p);
+            }
+        }
+    }
+    
+    vector<ofColor> cols;
+    for(int i = 0; i < colorBins.size(); i++) {
+        cols.push_back(colorBins[i].first);
+    }
+    return cols;
+}
+
+void ofApp::applyColorsToSupershape(vector<ofColor> cols) {
+    vector<ofColor> culledColors;
+    float threshold = 150;
+    for(int i = 0; i < cols.size(); i++) {
+        if(cols[i].r > threshold || cols[i].g > threshold || cols[i].b > threshold) {
+            culledColors.push_back(cols[i]);
+        }
+    }
+    int i = 0;
+    m_ambient = culledColors[i];
+    i += int(culledColors.size() / 6);
+    m_diffuse = culledColors[i];
+    i += int(culledColors.size() / 6);
+    m_specular = culledColors[i];
+    i += int(culledColors.size() / 6);
+    l_ambient = culledColors[i];
+    i += int(culledColors.size() / 6);
+    l_diffuse = culledColors[i];
+    i += int(culledColors.size() / 6);
+    l_specular = culledColors[i];
+
 }
 
 //--------------------------------------------------------------
