@@ -100,15 +100,12 @@ void ofApp::setup(){
     ofHttpResponse resp = ofLoadURL("http://api.openweathermap.org/data/2.5/weather?q=London,uk&appid=e69f027f111c4b9f3d7c5cef5da1c8a7");
     cout<<resp.data<<endl;
     
-<<<<<<< Updated upstream
-=======
     ofxNestedFileLoader loader;
-    imagePaths = loader.load("sunrisekingdomimages");
+    imagePaths = loader.load("Images");
     
     img.load(imagePaths[0]);
     imgIndex = 0;
     
->>>>>>> Stashed changes
     ofEnableAntiAliasing();
 }
 
@@ -122,19 +119,7 @@ ofVec3f ofApp::calculateFaceNormal(ofVec3f A, ofVec3f B, ofVec3f C) {
 
 //--------------------------------------------------------------
 void ofApp::update(){
-<<<<<<< Updated upstream
 
-
-    /*
-	float rollPercent = ofMap(cam.getRoll(), -90, 90, 0, 20);
-	float pitchPercent = ofMap(cam.getPitch(), -180, 180, 1, 100);
-
-	m2 = ofLerp(m2, rollPercent, 0.3);
-	n22 = ofLerp(n22, pitchPercent, 0.3);
-     */
-=======
-    
->>>>>>> Stashed changes
 }
 
 //--------------------------------------------------------------
@@ -189,40 +174,31 @@ void ofApp::draw(){
 	ofDisableDepthTest();
 	ofSetColor(255);
     
-<<<<<<< Updated upstream
-    blurShader.begin();
-    blurShader.setUniform2f("resolution", objectBuffer.getWidth(), objectBuffer.getHeight());
-    blurShader.setUniformTexture("inputTexture", objectBuffer.getTexture(), 0);
-    ofDrawRectangle(0, 0, objectBuffer.getWidth(), objectBuffer.getHeight());
-	//objectBuffer.draw(0, 0);
-    
-    blurShader.end();
-=======
    //  blurShader.begin();
     //blurShader.setUniform2f("resolution", objectBuffer.getWidth(), objectBuffer.getHeight());
    // blurShader.setUniformTexture("inputTexture", objectBuffer.getTexture(), 0);
     //ofDrawRectangle(0, 0, objectBuffer.getWidth(), objectBuffer.getHeight());
     objectBuffer.draw(0, 0);
     //blurShader.end();
->>>>>>> Stashed changes
 
 	if(showGui) {
+        ofSetColor(255);
 		lightGui.draw();
 		supershapeGui.draw();
-        img.draw(ofGetWidth() - img.getWidth()/10, 0, img.getWidth()/10, img.getHeight()/10);
-        drawColors(cols, ofGetWidth() - img.getWidth()/10, img.getHeight()/10);
+        img.draw(ofGetWidth()/2 - img.getWidth()/10/2, 0, img.getWidth()/10, img.getHeight()/10);
+        drawColors(cols, ofGetWidth()/2 - img.getWidth()/10/2, img.getHeight()/10, ofGetWidth()/2 + img.getWidth()/10/2);
 	}
 }
 
 //--------------------------------------------------------------
-void ofApp::drawColors(vector<ofColor> cols, int _x, int _y) {
+void ofApp::drawColors(vector<ofColor> cols, int _x, int _y, float limit) {
     float x = _x;
     float y = _y;
     for(int i = 0; i < cols.size(); i++) {
         ofSetColor(cols[i]);
         ofDrawRectangle(x, y, 20, 20);
         x += 20;
-        if(x > ofGetWidth()) {
+        if(x+20 > limit) {
             x = _x;
             y += 20;
         }
@@ -334,16 +310,16 @@ void ofApp::applyColorsToSupershape(vector<ofColor> cols) {
     }
     int i = 0;
     m_ambient = culledColors[i];
-    i += int(culledColors.size() / 6);
+    i += int(culledColors.size() / 4);
     m_diffuse = culledColors[i];
-    i += int(culledColors.size() / 6);
-    m_specular = culledColors[i];
-    i += int(culledColors.size() / 6);
+    //i += int(culledColors.size() / 6);
+    //m_specular = culledColors[i];
+    i += int(culledColors.size() / 4);
     l_ambient = culledColors[i];
-    i += int(culledColors.size() / 6);
+    i += int(culledColors.size() / 4);
     l_diffuse = culledColors[i];
-    i += int(culledColors.size() / 6);
-    l_specular = culledColors[i];
+    //i += int(culledColors.size() / 6);
+    //l_specular = culledColors[i];
 
 }
 

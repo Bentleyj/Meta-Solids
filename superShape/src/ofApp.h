@@ -31,7 +31,7 @@ class ofApp : public ofBaseApp{
     
         vector<ofColor> getColorsFromImage(ofImage img);
     
-        void drawColors(vector<ofColor> cols, int _x, int _y);
+        void drawColors(vector<ofColor> cols, int _x, int _y, float limit);
     
         void applyColorsToSupershape(vector<ofColor> cols);
     
