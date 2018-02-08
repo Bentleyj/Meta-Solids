@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "ofxNestedFileLoader.h"
+#include "weatherManager.hpp"
 
 class ofApp : public ofBaseApp{
 
@@ -25,6 +26,7 @@ class ofApp : public ofBaseApp{
 
 		ofVec3f getPoint(float theta, float phi);
 		ofVec3f cartesianToSpherical(ofVec3f point);
+        ofVec3f sphericalToCartesian(ofVec3f point);
 		float supershape(float theta, float m, float n1, float n2, float n3);
 		ofVec3f scaleColorToUniform(ofColor col);
 		ofVec3f calculateFaceNormal(ofVec3f A, ofVec3f B, ofVec3f C);
@@ -38,6 +40,8 @@ class ofApp : public ofBaseApp{
         ofImage img;
         int imgIndex;
         vector<string> imagePaths;
+    
+        weatherManager weather;
     
         vector<ofColor> cols;
 
@@ -66,6 +70,10 @@ class ofApp : public ofBaseApp{
 		ofParameter<ofColor> l_ambient;
 		ofParameter<ofColor> l_diffuse;
 		ofParameter<ofColor> l_specular;
+        ofParameter<ofVec3f> moonPos;
+        ofParameter<ofColor> moon_ambient;
+        ofParameter<ofColor> moon_diffuse;
+        ofParameter<ofColor> moon_specular;
 		ofParameter<float> blur;
 		ofParameter<bool> showGui;
 

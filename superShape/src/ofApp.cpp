@@ -39,7 +39,8 @@ void ofApp::setup(){
 	lightGui.setup("Lighting", lightSettingsFile);
 
 	lighting.setName("Lighting");
-	lighting.add(lightPos.set("Light Position", ofPoint(0, 0, 0), ofPoint(-500, -500, -500), ofPoint(500, 500, 500)));
+	lighting.add(lightPos.set("Light Position", ofPoint(1000, 0, 500), ofPoint(-2000, -2000, -2000), ofPoint(2000, 2000, 2000)));
+    lighting.add(moonPos.set("Moon Position", ofPoint(1000, 0, 500), ofPoint(-2000, -2000, -2000), ofPoint(2000, 2000, 2000)));
 	lighting.add(m_ambient.set("Material Ambient", ofColor(255)));
 	lighting.add(m_diffuse.set("Material Diffuse", ofColor(255)));
 	lighting.add(m_specular.set("Material Specular", ofColor(255)));
@@ -47,6 +48,9 @@ void ofApp::setup(){
 	lighting.add(l_ambient.set("Light Ambient", ofColor(255)));
 	lighting.add(l_diffuse.set("Light Diffuse", ofColor(255)));
 	lighting.add(l_specular.set("Light Specular", ofColor(255)));
+    lighting.add(moon_ambient.set("Moon Ambient", ofColor(255)));
+    lighting.add(moon_diffuse.set("Moon Diffuse", ofColor(255)));
+    lighting.add(moon_specular.set("Moon Specular", ofColor(255)));
 	lighting.add(blur.set("Rim Glow", 1, 0, 20));
 
 	lightGui.add(lighting);
@@ -97,11 +101,10 @@ void ofApp::setup(){
 	objectBuffer.allocate(ofGetWidth(), ofGetHeight());
 	blurBuffer.allocate(ofGetWidth(), ofGetHeight());
     
-    ofHttpResponse resp = ofLoadURL("http://api.openweathermap.org/data/2.5/weather?q=London,uk&appid=e69f027f111c4b9f3d7c5cef5da1c8a7");
-    cout<<resp.data<<endl;
-    
     ofxNestedFileLoader loader;
-    imagePaths = loader.load("Images");
+    imagePaths = loader.load("sunrisekingdomimages");
+    
+    weather.updateWeather();
     
     img.load(imagePaths[0]);
     imgIndex = 0;
@@ -119,7 +122,22 @@ ofVec3f ofApp::calculateFaceNormal(ofVec3f A, ofVec3f B, ofVec3f C) {
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    weather.updateWeatherWithInterval();
+    ofVec3f lPos = lightPos.get();
+    lPos = cartesianToSpherical(lPos);
+    lPos.y = ofMap(ofGetUnixTime(), weather.sunrise, weather.sunset, PI, 0);
+    lPos = sphericalToCartesian(lPos);
+    
+    ofVec3f mPos = lPos;
+    mPos.x *= -1;
+    mPos.y *= -1;
+    
+    moonPos.set(mPos);
 
+    lightPos.set(lPos);
+    
+    if(cols.size())
+        applyColorsToSupershape(cols);
 }
 
 //--------------------------------------------------------------
@@ -132,13 +150,18 @@ void ofApp::draw(){
 	ofEnableDepthTest();
 	cam.begin();
 	light.begin();
+    light.setUniform3f("c_position", cam.getPosition());
 	light.setUniform3f("l_position", lightPos);
+    light.setUniform3f("moon_position", moonPos);
 	light.setUniform3f("l_ambient", scaleColorToUniform(l_ambient));
 	light.setUniform3f("l_diffuse", scaleColorToUniform(l_diffuse));
 	light.setUniform3f("l_specular", scaleColorToUniform(l_specular));
 	light.setUniform3f("m_ambient", scaleColorToUniform(m_ambient));
 	light.setUniform3f("m_diffuse", scaleColorToUniform(m_diffuse));
 	light.setUniform3f("m_specular", scaleColorToUniform(m_specular));
+    light.setUniform3f("moon_ambient", scaleColorToUniform(moon_ambient));
+    light.setUniform3f("moon_diffuse", scaleColorToUniform(moon_diffuse));
+    light.setUniform3f("moon_specular", scaleColorToUniform(moon_specular));
 
 	light.setUniform1f("m1", m1);
 	light.setUniform1f("n11", n11);
@@ -166,6 +189,14 @@ void ofApp::draw(){
 	mesh.draw();
 
 	light.end();
+    
+    ofPushMatrix();
+    ofTranslate(cam.getPosition());
+
+    ofVec3f v = lightPos.get();// + cam.getPosition();
+
+    ofDrawSphere(v, 20);
+    ofPopMatrix();
 
 	cam.end();
 	ofDisableDepthTest();
@@ -216,9 +247,20 @@ ofVec3f ofApp::scaleColorToUniform(ofColor col) {
 //--------------------------------------------------------------
 ofVec3f ofApp::cartesianToSpherical(ofVec3f point) {
 	float r = point.length();
-	float theta = acos(point.z / r);
-	float phi = atan(point.y / point.x);
-	return ofVec3f(theta, phi, r);
+    float theta = atan2(point.y , point.x);
+	float phi = acos(point.z / r);
+	return ofVec3f(r, theta, phi);
+}
+
+//--------------------------------------------------------------
+ofVec3f ofApp::sphericalToCartesian(ofVec3f point) {
+    float r = point.x;
+    float theta = point.y;
+    float phi = point.z;
+    float x = r * cos(theta) * sin(phi);
+    float y = r * sin(theta) * sin(phi);
+    float z = r * cos(phi);
+    return ofVec3f(x, y, z);
 }
 
 //--------------------------------------------------------------
@@ -253,7 +295,6 @@ void ofApp::keyPressed(int key){
         imgIndex %= imagePaths.size();
         img.load(imagePaths[imgIndex]);
         cols = getColorsFromImage(img);
-        applyColorsToSupershape(cols);
     }
     if(key == OF_KEY_LEFT) {
         imgIndex--;
@@ -261,7 +302,6 @@ void ofApp::keyPressed(int key){
             imgIndex = imagePaths.size() - 1;
         img.load(imagePaths[imgIndex]);
         cols = getColorsFromImage(img);
-        applyColorsToSupershape(cols);
     }
 }
 
@@ -308,18 +348,24 @@ void ofApp::applyColorsToSupershape(vector<ofColor> cols) {
             culledColors.push_back(cols[i]);
         }
     }
+    
     int i = 0;
-    m_ambient = culledColors[i];
-    i += int(culledColors.size() / 4);
-    m_diffuse = culledColors[i];
-    //i += int(culledColors.size() / 6);
-    //m_specular = culledColors[i];
-    i += int(culledColors.size() / 4);
-    l_ambient = culledColors[i];
-    i += int(culledColors.size() / 4);
-    l_diffuse = culledColors[i];
-    //i += int(culledColors.size() / 6);
-    //l_specular = culledColors[i];
+    moon_ambient = moon_ambient.get().getLerped(culledColors[i], 0.1);
+    i += int(culledColors.size() / 5);
+
+    moon_diffuse = moon_diffuse.get().getLerped(culledColors[i], 0.1);
+    i += int(culledColors.size() / 5);
+    
+    moon_specular = moon_specular.get().getLerped(culledColors[i], 0.1);
+    i += int(culledColors.size() / 5);
+    
+    l_ambient = l_ambient.get().getLerped(culledColors[i], 0.1);
+    i += int(culledColors.size() / 5);
+    
+    l_diffuse = l_diffuse.get().getLerped(culledColors[i], 0.1);
+    i += int(culledColors.size() / 5);
+
+    l_specular = l_specular.get().getLerped(culledColors[i], 0.1);
 
 }
 
