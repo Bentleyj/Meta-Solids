@@ -102,8 +102,9 @@ void ofApp::setup(){
 	blurBuffer.allocate(ofGetWidth(), ofGetHeight());
     
     ofxNestedFileLoader loader;
-    imagePaths = loader.load("sunrisekingdomimages");
-    
+//    imagePaths = loader.load("sunrisekingdomimages");
+    imagePaths = loader.load("Images");
+
     weather.updateWeather();
     
     img.load(imagePaths[0]);
@@ -305,6 +306,16 @@ void ofApp::keyPressed(int key){
     }
 }
 
+bool compareHue(ofColor col1, ofColor col2) {
+    int h1 = col1.getHue();
+    int h2 = col2.getHue();
+    return h1 < h2;
+}
+
+bool compareNumColors(pair<ofColor, int> col1, pair<ofColor, int> col2) {
+    return col1.second < col2.second;
+}
+
 //--------------------------------------------------------------
 vector<ofColor> ofApp::getColorsFromImage(ofImage img) {
     vector<pair<ofColor, int>> colorBins;
@@ -333,14 +344,19 @@ vector<ofColor> ofApp::getColorsFromImage(ofImage img) {
         }
     }
     
+
+    std::sort(colorBins.begin(), colorBins.end(), compareNumColors);
+    
     vector<ofColor> cols;
     for(int i = 0; i < colorBins.size(); i++) {
         cols.push_back(colorBins[i].first);
     }
+
     return cols;
 }
 
 void ofApp::applyColorsToSupershape(vector<ofColor> cols) {
+    
     vector<ofColor> culledColors;
     float threshold = 150;
     for(int i = 0; i < cols.size(); i++) {
@@ -352,18 +368,26 @@ void ofApp::applyColorsToSupershape(vector<ofColor> cols) {
     int i = 0;
     moon_ambient = moon_ambient.get().getLerped(culledColors[i], 0.1);
     i += int(culledColors.size() / 5);
+    i %= culledColors.size();
 
     moon_diffuse = moon_diffuse.get().getLerped(culledColors[i], 0.1);
     i += int(culledColors.size() / 5);
+    i %= culledColors.size();
+
     
     moon_specular = moon_specular.get().getLerped(culledColors[i], 0.1);
     i += int(culledColors.size() / 5);
+    i %= culledColors.size();
+
     
     l_ambient = l_ambient.get().getLerped(culledColors[i], 0.1);
     i += int(culledColors.size() / 5);
+    i %= culledColors.size();
+
     
     l_diffuse = l_diffuse.get().getLerped(culledColors[i], 0.1);
     i += int(culledColors.size() / 5);
+    i %= culledColors.size();
 
     l_specular = l_specular.get().getLerped(culledColors[i], 0.1);
 
