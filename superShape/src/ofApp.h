@@ -76,6 +76,7 @@ class ofApp : public ofBaseApp{
         ofParameter<ofColor> moon_specular;
 		ofParameter<float> blur;
 		ofParameter<bool> showGui;
+        ofParameter<int> bufferSize;
 
 		ofxPanel supershapeGui;
 		ofParameter<bool> drawNormals;

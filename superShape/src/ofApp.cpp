@@ -60,6 +60,7 @@ void ofApp::setup(){
 	string supershapeSettingsFile = "settings/supershape.xml";
 
 	supershapeGui.setup("Supershape", supershapeSettingsFile);
+    supershapeGui.add(bufferSize.set("Buffer Size", ofGetHeight(), 0.0, ofGetHeight()));
 
 	supershapeGroup1.setName("Shape 1");
 
@@ -82,7 +83,7 @@ void ofApp::setup(){
 	supershapeGui.add(supershapeGroup1);
 	supershapeGui.add(supershapeGroup2);
 	supershapeGui.add(drawNormals.set("Draw Normals", false));
-	supershapeGui.add(scale.set("Scale", 20.0, 1.0, 100.0));
+	supershapeGui.add(scale.set("Scale", 20.0, 1.0, 200.0));
     supershapeGui.add(speed.set("Speed", 1.0, 0.0, 2.0));
     supershapeGui.add(noiseScale.set("Noise Scale", 1.0, 0.0, 2.0));
     supershapeGui.add(noiseResolution.set("Noise Resolution", 1.0, 0.0, 20.0));
@@ -96,10 +97,6 @@ void ofApp::setup(){
 	blurShader.load("shaders/blur");
 
 	ofBackground(229.5);
-
-	rimBuffer.allocate(ofGetWidth(), ofGetHeight());
-	objectBuffer.allocate(ofGetWidth(), ofGetHeight());
-	blurBuffer.allocate(ofGetWidth(), ofGetHeight());
     
     ofxNestedFileLoader loader;
 //    imagePaths = loader.load("sunrisekingdomimages");
@@ -111,6 +108,8 @@ void ofApp::setup(){
     imgIndex = 0;
     
     ofEnableAntiAliasing();
+	rimBuffer.allocate(ofGetHeight(), ofGetHeight());
+	objectBuffer.allocate(ofGetHeight(), ofGetHeight());
 }
 
 //--------------------------------------------------------------
@@ -210,9 +209,36 @@ void ofApp::draw(){
     //blurShader.setUniform2f("resolution", objectBuffer.getWidth(), objectBuffer.getHeight());
    // blurShader.setUniformTexture("inputTexture", objectBuffer.getTexture(), 0);
     //ofDrawRectangle(0, 0, objectBuffer.getWidth(), objectBuffer.getHeight());
-    objectBuffer.draw(0, 0);
+    //objectBuffer.draw(0, 0);
     //blurShader.end();
 
+	//blurBufferX.begin();
+	//ofClear(255, 255, 255, 0);
+	//blurX.begin();
+	//blurX.setUniform1f("blurAmnt", blur);
+	//rimBuffer.draw(0, 0);
+	//blurX.end();
+	//blurBufferX.end();
+
+	//blurBufferY.begin();
+	//ofClear(255, 255, 255, 0);
+	//blurY.begin();
+	//blurY.setUniform1f("blurAmnt", blur);
+	//blurBufferX.draw(0, 0);
+	//blurY.end();
+	//blurBufferY.end();
+
+	//combine.begin();
+	//combine.setUniformTexture("u_Object", objectBuffer.getTexture(), 0);
+	//combine.setUniformTexture("u_Rim", blurBufferY.getTexture(), 1);
+	//combine.setUniform2f("u_Res", ofVec2f(ofGetWidth(), ofGetHeight()));
+	//ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
+	//combine.end();
+
+	objectBuffer.draw(0, 0, bufferSize, bufferSize);
+
+	//blurBufferY.draw(0, 0);
+	//objectBuffer.draw(0, 0);
 	if(showGui) {
         ofSetColor(255);
 		lightGui.draw();
