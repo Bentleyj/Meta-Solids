@@ -44,6 +44,9 @@
 		<B>1</B>
 	</Shape_2>
 	<Draw_Normals>0</Draw_Normals>
-	<Scale>100</Scale>
-<Speed>0.03</Speed>
+	<Scale>108.46</Scale>
+<Speed>0.1</Speed>
+<Buffer_Size>129</Buffer_Size>
+	<Noise_Scale>2</Noise_Scale>
+	<Noise_Resolution>1.4</Noise_Resolution>
 </Supershape>

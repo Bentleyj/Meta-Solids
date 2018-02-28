@@ -14,18 +14,18 @@
 		<Moon_Diffuse>163, 149, 154, 255</Moon_Diffuse>
 		<Moon_Specular>163, 158, 154, 255</Moon_Specular>
 	<Lighting>
-			<Light_Position>998.053, -62.3751, 500</Light_Position>
-			<Moon_Position>-998.053, 62.3751, 500</Moon_Position>
+			<Light_Position>-1000, -8.74228e-05, 500</Light_Position>
+			<Moon_Position>1000, 8.74228e-05, 500</Moon_Position>
 			<Material_Ambient>42, 42, 42, 255</Material_Ambient>
 			<Material_Diffuse>122, 120, 120, 255</Material_Diffuse>
 			<Material_Specular>255, 255, 255, 255</Material_Specular>
 			<Material_Shininess>1</Material_Shininess>
-			<Light_Ambient>176, 157, 129, 255</Light_Ambient>
-			<Light_Diffuse>162, 161, 161, 255</Light_Diffuse>
-			<Light_Specular>234, 206, 151, 255</Light_Specular>
-			<Moon_Ambient>207, 159, 186, 255</Moon_Ambient>
-			<Moon_Diffuse>168, 96, 45, 255</Moon_Diffuse>
-			<Moon_Specular>237, 184, 98, 255</Moon_Specular>
+			<Light_Ambient>242, 219, 176, 255</Light_Ambient>
+			<Light_Diffuse>148, 164, 173, 255</Light_Diffuse>
+			<Light_Specular>178, 169, 153, 255</Light_Specular>
+			<Moon_Ambient>178, 31, 67, 255</Moon_Ambient>
+			<Moon_Diffuse>195, 120, 151, 255</Moon_Diffuse>
+			<Moon_Specular>169, 138, 77, 255</Moon_Specular>
 			<Rim_Glow>1</Rim_Glow>
 		</Lighting>
 	</Lighting>

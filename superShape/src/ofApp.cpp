@@ -110,6 +110,7 @@ void ofApp::setup(){
     ofEnableAntiAliasing();
 	rimBuffer.allocate(ofGetHeight(), ofGetHeight());
 	objectBuffer.allocate(ofGetHeight(), ofGetHeight());
+    blurBuffer.allocate(bufferSize, bufferSize);
 }
 
 //--------------------------------------------------------------
@@ -136,8 +137,8 @@ void ofApp::update(){
 
     lightPos.set(lPos);
     
-    if(cols.size())
-        applyColorsToSupershape(cols);
+    if(selectedCols.size())
+        applyColorsToSupershape(selectedCols);
 }
 
 //--------------------------------------------------------------
@@ -234,8 +235,16 @@ void ofApp::draw(){
 	//combine.setUniform2f("u_Res", ofVec2f(ofGetWidth(), ofGetHeight()));
 	//ofDrawRectangle(0, 0, ofGetWidth(), ofGetHeight());
 	//combine.end();
-
-	objectBuffer.draw(0, 0, bufferSize, bufferSize);
+/*
+    blurBuffer.begin();
+    ofClear(0);
+    blurShader.begin();
+    blurShader.setUniformTexture("inputTexture", objectBuffer, 0);
+    blurShader.setUniform2f("resolution", bufferSize, bufferSize);
+    blurShader.end();
+    blurBuffer.end();
+    */
+    objectBuffer.draw(0, 0, bufferSize, bufferSize);
 
 	//blurBufferY.draw(0, 0);
 	//objectBuffer.draw(0, 0);
@@ -383,45 +392,60 @@ vector<ofColor> ofApp::getColorsFromImage(ofImage img) {
 
 void ofApp::applyColorsToSupershape(vector<ofColor> cols) {
     
-    vector<ofColor> culledColors;
-    float threshold = 150;
-    for(int i = 0; i < cols.size(); i++) {
-        if(cols[i].r > threshold || cols[i].g > threshold || cols[i].b > threshold) {
-            culledColors.push_back(cols[i]);
-        }
-    }
-    
     int i = 0;
-    moon_ambient = moon_ambient.get().getLerped(culledColors[i], 0.1);
-    i += int(culledColors.size() / 5);
-    i %= culledColors.size();
-
-    moon_diffuse = moon_diffuse.get().getLerped(culledColors[i], 0.1);
-    i += int(culledColors.size() / 5);
-    i %= culledColors.size();
-
+    /*
+    m_ambient = m_ambient.get().getLerped(cols[i], 0.1);
+    i++;
+    i %= cols.size();
     
-    moon_specular = moon_specular.get().getLerped(culledColors[i], 0.1);
-    i += int(culledColors.size() / 5);
-    i %= culledColors.size();
-
+    m_specular = m_specular.get().getLerped(cols[i], 0.1);
+    i++;
+    i %= cols.size();
     
-    l_ambient = l_ambient.get().getLerped(culledColors[i], 0.1);
-    i += int(culledColors.size() / 5);
-    i %= culledColors.size();
-
+    m_diffuse = m_diffuse.get().getLerped(cols[i], 0.1);
+    i++;
+    i %= cols.size();
+     */
     
-    l_diffuse = l_diffuse.get().getLerped(culledColors[i], 0.1);
-    i += int(culledColors.size() / 5);
-    i %= culledColors.size();
+    moon_ambient = moon_ambient.get().getLerped(cols[i], 0.1);
+    i++;
+    i %= cols.size();
 
-    l_specular = l_specular.get().getLerped(culledColors[i], 0.1);
+    moon_diffuse = moon_diffuse.get().getLerped(cols[i], 0.1);
+    i++;
+    i %= cols.size();
+    
+    moon_specular = moon_specular.get().getLerped(cols[i], 0.1);
+    i++;
+    i %= cols.size();
+    
+    l_ambient = l_ambient.get().getLerped(cols[i], 0.1);
+    i++;
+    i %= cols.size();
+    
+    l_diffuse = l_diffuse.get().getLerped(cols[i], 0.1);
+    i++;
+    i %= cols.size();
+
+    l_specular = l_specular.get().getLerped(cols[i], 0.1);
 
 }
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
-
+    if(key == ' ') {
+        vector<ofColor> culledColors;
+        float threshold = 150;
+        for(int i = 0; i < cols.size(); i++) {
+            if(cols[i].r > threshold || cols[i].g > threshold || cols[i].b > threshold) {
+                culledColors.push_back(cols[i]);
+            }
+        }
+        selectedCols.clear();
+        for(int i = 0; i < 9; i++) {
+            selectedCols.push_back(culledColors[int(ofRandom(culledColors.size()))]);
+        }
+    }
 }
 
 //--------------------------------------------------------------

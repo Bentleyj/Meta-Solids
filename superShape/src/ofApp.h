@@ -44,6 +44,7 @@ class ofApp : public ofBaseApp{
         weatherManager weather;
     
         vector<ofColor> cols;
+        vector<ofColor> selectedCols;
 
 		ofShader light;
 		ofShader rimLight;
